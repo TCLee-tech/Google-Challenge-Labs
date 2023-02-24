@@ -1,0 +1,160 @@
+Query 1: Total Confirmed Cases
+Build a query that will answer "What was the total count of confirmed cases on Date ?" The query needs to return a single row containing the sum of confirmed cases across all countries. The name of the column should be total_cases_worldwide.
+
+Columns to reference:
+
+cumulative_confirmed
+date
+
+
+=========================================================================================
+
+Query 2: Worst Affected Areas
+Build a query for answering "How many states in the US had more than Death Count deaths on Date ?" The query needs to list the output in the field count_of_states.
+
+Hint: Don't include NULL values.
+
+Columns to reference:
+
+country_name
+subregion1_name (for state information)
+cumulative_deceased
+
+
+==========================================================================================
+
+Query 3: Identifying Hotspots
+Build a query that will answer "List all the states in the United States of America that had more than Confirmed Cases confirmed cases on Date ?" The query needs to return the State Name and the corresponding confirmed cases arranged in descending order. Name of the fields to return state and total_confirmed_cases.
+
+Columns to reference:
+
+country_code
+subregion1_name (for state information)
+cumulative_confirmed
+
+
+==========================================================================================
+
+Query 4: Fatality Ratio
+Build a query that will answer "What was the case-fatality ratio in Italy for the month of Month 2020?" Case-fatality ratio here is defined as (total deaths / total confirmed cases) * 100. Write a query to return the ratio for the month of Month 2020 and containing the following fields in the output: total_confirmed_cases, total_deaths, case_fatality_ratio.
+
+Columns to reference:
+
+country_name
+cumulative_confirmed
+cumulative_deceased
+
+
+==========================================================================================
+
+Query 5: Identifying specific day
+Build a query that will answer: "On what day did the total number of deaths cross Death count in Italy in Italy?" The query should return the date in the format yyyy-mm-dd.
+
+Columns to reference:
+
+country_name
+cumulative_deceased
+
+
+==========================================================================================
+
+Query 6: Finding days with zero net new cases
+The following query is written to identify the number of days in India between Start date in India and Close date in India when there were zero increases in the number of confirmed cases. However it is not executing properly. You need to update the query to complete it and obtain the result:
+
+WITH india_cases_by_date AS (
+  SELECT
+    date,
+    SUM(cumulative_confirmed) AS cases
+  FROM
+    `bigquery-public-data.covid19_open_data.covid19_open_data`
+  WHERE
+    country_name="India"
+    AND date between '2020-02-21' and '2020-03-15'
+  GROUP BY
+    date
+  ORDER BY
+    date ASC
+ )
+, india_previous_day_comparison AS
+(SELECT
+  date,
+  cases,
+  LAG(cases) OVER(ORDER BY date) AS previous_day,
+  cases - LAG(cases) OVER(ORDER BY date) AS net_new_cases
+FROM india_cases_by_date
+)
+
+
+=========================================================================================
+
+Query 7: Doubling rate
+Using the previous query as a template, write a query to find out the dates on which the confirmed cases increased by more than Limit Value % compared to the previous day (indicating doubling rate of ~ 7 days) in the US between the dates March 22, 2020 and April 20, 2020. The query needs to return the list of dates, the confirmed cases on that day, the confirmed cases the previous day, and the percentage increase in cases between the days. Use the following names for the returned fields: Date, Confirmed_Cases_On_Day, Confirmed_Cases_Previous_Day and Percentage_Increase_In_Cases.
+
+
+==========================================================================================
+
+Query 8: Recovery rate
+Build a query to list the recovery rates of countries arranged in descending order (limit to Limit Value ) upto the date May 10, 2020. Restrict the query to only those countries having more than 50K confirmed cases. The query needs to return the following fields: country, recovered_cases, confirmed_cases, recovery_rate.
+
+Columns to reference:
+
+country_name
+cumulative_confirmed
+cumulative_recovered
+
+
+==========================================================================================
+
+Query 9: CDGR - Cumulative Daily Growth Rate
+The following query is trying to calculate the CDGR on Date (Cumulative Daily Growth Rate) for France since the day the first case was reported. The first case was reported on Jan 24, 2020. The CDGR is calculated as:
+
+((last_day_cases/first_day_cases)^1/days_diff)-1)
+
+Where :
+
+last_day_cases is the number of confirmed cases on May 10, 2020
+first_day_cases is the number of confirmed cases on Jan 24, 2020
+days_diff is the number of days between Jan 24 - May 10, 2020
+The query isn’t executing properly. Can you fix the error to make the query execute successfully?
+
+WITH
+  france_cases AS (
+  SELECT
+    date,
+    SUM(cumulative_confirmed) AS total_cases
+  FROM
+    `bigquery-public-data.covid19_open_data.covid19_open_data`
+  WHERE
+    country_name="France"
+    AND date IN ('2020-01-24',
+      '2020-05-10')
+  GROUP BY
+    date
+  ORDER BY
+    date)
+, summary as (
+SELECT
+  total_cases AS first_day_cases,
+  LEAD(total_cases) AS last_day_cases,
+  DATE_DIFF(LEAD(date) OVER(ORDER BY date),date, day) AS days_diff
+FROM
+  france_cases
+LIMIT 1
+)
+select first_day_cases, last_day_cases, days_diff, SQRT((last_day_cases/first_day_cases),(1/days_diff))-1 as cdgr
+from summary
+
+
+=========================================================================================
+
+Query 10: Create a Datastudio report
+Create a Google Data Studio report that plots the following for the United States:
+
+Number of Confirmed Cases
+Number of Deaths
+Date range : Date Range
+
+Hint: Use the below image as a reference while building the report and make sure your report is similar to it.
+
+Hint: Do not use Explore with Data Studio option from BigQuery.
+
