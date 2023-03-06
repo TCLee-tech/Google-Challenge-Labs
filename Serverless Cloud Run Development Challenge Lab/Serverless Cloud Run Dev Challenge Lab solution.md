@@ -93,7 +93,7 @@ Set up a Frontend Service. Use the information in the table below:
 | Code | pet-theory/lab07/staging-frontend-billing |
 
 #### Architecture
-![Task 2 architecture](https://github.com/TCLee-tech/Google/blob/864f971a0facf9162a0aa214fb239a6383c3f559/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%202%20image.jpg)  
+![Task 2 architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/b56014e201f68d6848596ecbfe2d38a370f5c884/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%202%20image.jpg)  
 
 #### Assessment
 To complete this section successfully, you are required to implement the following tasks:
