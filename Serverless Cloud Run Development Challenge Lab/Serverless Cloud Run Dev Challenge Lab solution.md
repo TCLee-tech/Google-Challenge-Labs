@@ -322,7 +322,7 @@ Use the new Service Account and redeploy the Frontend Service:
 | Service Account | Frontend service account, e.g. frontend-service-sa-975 |
 
 #### Architecture
-![Task 7 Architecture](https://github.com/TCLee-tech/Google/blob/262e0ba3aefcd4b641103e076ab48d91f187499f/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%207%20image)  
+![Task 7 Architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/c241996b2dd1b29d049e787c054915260bc0e528/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%207%20image.jpg)  
 
 #### Assessment: Cloud Run Development
 To complete this section successfully, you are required to implement the following tasks:
