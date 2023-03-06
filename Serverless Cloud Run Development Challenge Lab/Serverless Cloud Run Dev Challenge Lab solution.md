@@ -297,7 +297,8 @@ To complete this section successfully, you are required to implement the followi
 
 **:point_right:^TO DO^**
 1. Create Frontend service account.  
-`gcloud iam service-accounts create [Frontend service account] --display-name "Billing Service Cloud Run Invoker"`  
+`gcloud iam service-accounts create [Frontend service account, e.g. frontend-service-sa-975] --display-name "Billing Service Cloud Run Invoker"`  
+
 2. Apply Frontend service account to Frontend production service
 ```  
 gcloud run services add-iam-policy-binding frontend-prod-service \
@@ -306,6 +307,11 @@ gcloud run services add-iam-policy-binding frontend-prod-service \
   --region us-central1 \
   --platform managed
 ```
+Note: Frontend production Cloud Run service is only deployed in Task 7 later.
+
+[Reference for gcloud run services add-iam-policy-binding](https://cloud.google.com/sdk/gcloud/reference/run/services/add-iam-policy-binding)
+  - syntax: gcloud run services add-iam-policy-binding [ID or fully qualified identifier of the Cloud Run service]
+  - `--member=PRINCIPAL`. The principal we are adding the binding for. Should be `user|group|serviceAccount:email` or `domain:domain`.
 
 <Hr>
 
@@ -335,9 +341,11 @@ To complete this section successfully, you are required to implement the followi
 **:point_right:^TO DO^**
 1. Change to sub-directory containing codes for Task 7.  
   `cd ~/pet-theory/lab07/prod-frontend-billing`
+
 2. Build tagged container image of "Frontend production service" using codes in this sub-directory.  
   `gcloud builds submit --tag gcr.io/$GOOGLE_CLOUD_PROJECT/frontend-prod:0.1`
-3. Deploy "Frontend production service" image to Cloud Run, no need authentication.
+
+  3. Deploy "Frontend production service" image to Cloud Run, unauthenticated.
   ```
   gcloud run deploy [Frontend production service, e.g. frontend-prod-service-350] \
     --image gcr.io/$GOOGLE_CLOUD_PROJECT/frontend-prod:0.1 \
@@ -345,18 +353,15 @@ To complete this section successfully, you are required to implement the followi
     --region us-central1 \
     --allow-unauthenticated 
   ```
-4.  Frontend service account was applied to frontend-prod-service in Task 6. Re-apply Frontend service account to Frontend production service created in step 3 above.
+4.  Re-bind Frontend Service Account from Task 6 to Frontend production service, e.g. frontend-prod-service-350, deployed in step 3 above.
   ```
-  gcloud run services add-iam-policy-binding [frontend production service] \
-    --member=serviceAccount:[Frontend service account]@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com \
+  gcloud run services add-iam-policy-binding [frontend production service, e.g. frontend-prod-service-350] \
+    --member=serviceAccount:[Frontend service account, e.g. frontend-service-sa-975]@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com \
     --role=roles/run.invoker \
     --region us-central1 \
     --platform managed
   ```
-5. Since Frontend production service communicates with Billing production service, ping the Billing production service endpoint.  
-  `curl -X get -H "Authorization: Bearer $(gcloud auth print-identity-token)" $PROD_BILLING_URL`  
-  You should get a response `{"status":"Billing Service Rest API: Online"}`  
-6. Access the production frontend service to display the user interface.  
+5. Access the production frontend service to display the user interface.  
     - save URL of production frontend service to an environment variable **FRONTEND_URL**:  
     ```
     FRONTEND_URL=$(gcloud run services describe [frontend production service] \
@@ -366,7 +371,7 @@ To complete this section successfully, you are required to implement the followi
     ```
     - display FRONTEND_URL  
       `echo $FRONTEND_URL`  
-    - make an annoymous unauthenticated GET request to frontend URL:  
+    - make an annoymous unauthenticated GET request to FRONTEND_URL:  
       `curl -X get $FRONTEND_URL`  
     - You should see info on screen from the Billing Service.  
 
