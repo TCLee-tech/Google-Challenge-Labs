@@ -6,7 +6,8 @@ Pet Theory is a veterinary practice which is keen to utilize serverless architec
 #### Architecture
 Pet Theory has nominated the existing monolithic Billing application to be reimagined using serverless.  
 Over the course of this lab, you will be expected to implement this design update.  
-![Serverless architecture for Billing application](https://github.com/TCLee-tech/Google/blob/94ca284b785d14e38cba2ab4179f1c61fcdb6dbd/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20architecture%20for%20billing%20application.jpg)  
+![Serverless architecture for Billing application](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/1e6f24202ad9bff67cc3c21ede453e377be04e31/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20architecture%20for%20billing%20application.jpg)  
+
 The development team will provide either the code or an image to be deployed as part of the solution.
 
 #### Developing a Minimal Viable Product (MVP)
