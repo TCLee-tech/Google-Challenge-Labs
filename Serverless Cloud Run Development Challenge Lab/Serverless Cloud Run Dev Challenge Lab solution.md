@@ -199,7 +199,7 @@ In preparation for the deployment to production, you will need to create a Servi
 | Role | N/A |
 
 #### Architecture
-![Task 4 architecture](https://github.com/TCLee-tech/Google/blob/eb8df3b722b7cde693df563c19201bf718292dc9/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%204%20image)  
+![Task 4 architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/132b1adbe32e003d1c14f0b7783883d6fc20197d/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%204%20image.jpg)  
 
 #### Assessment: Service Account
 To complete this section successfully, you are required to create a Service Account.
