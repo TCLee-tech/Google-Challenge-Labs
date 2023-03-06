@@ -223,7 +223,7 @@ Associate the Billing Service Account with Billing Service:
 | Service Account | Billing service account, e.g. billing-service-sa-524|
 
 #### Architecture
-![Task 5 Architecture](https://github.com/TCLee-tech/Google/blob/4e4822d85186d035aaa58a96884c64a39e3fa86d/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%205%20image)
+![Task 5 Architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/7e589e7f503a4c4cbbe7631d49f2086f48b78cf1/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%205%20image.jpg)
 
 #### Assessment: Cloud Run Development
 To complete this section successfully, you are required to implement the following tasks:
