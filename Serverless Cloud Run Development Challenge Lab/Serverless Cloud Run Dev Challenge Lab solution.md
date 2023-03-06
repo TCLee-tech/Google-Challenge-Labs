@@ -136,7 +136,7 @@ gcloud run deploy [Frontend staging service, e.g. frontend-staging-service-756] 
 | Code | pet-theory/lab07/staging-api-billing |
 
 #### Architecture
-![Task 3 architecture](https://github.com/TCLee-tech/Google/blob/144bdd4409319b76b91fb1f2a3d9ff43a2ce681d/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%203%20image.jpg)  
+![Task 3 architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/76dedfc130c071f7c9ddd163ce7cd95c038abc92/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%203%20image.jpg)  
 
 #### Assessment: Cloud Run Development
 To complete this section successfully, you are required to implement the following tasks:
