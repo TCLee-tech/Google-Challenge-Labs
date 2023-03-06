@@ -285,7 +285,7 @@ Create a new Service Account for the Frontend capable of invoking the Billing Se
 | Role | run.invoker |
 
 #### Architecture
-![Task 6 Architecture](https://github.com/TCLee-tech/Google/blob/8a6290f5d56fdfdaaa185d23aadf84050f7d215c/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%206%20image)
+![Task 6 Architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/94b33dbcb8c994bc395b81e22ea7d03c70a0ee2a/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%206%20image.jpg)
 
 #### Assessment
 To complete this section successfully, you are required to implement the following tasks:
