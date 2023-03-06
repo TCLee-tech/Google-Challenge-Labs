@@ -44,7 +44,8 @@ You will build a prototype that meets the following high-level requirements:
 | Code | pet-theory/lab07/unit-api-billing |
 
 #### Architecture
-![Task 1 architecture](https://github.com/TCLee-tech/Google/blob/5ae829ca609861815b1bd67659d7f5a4f65d9834/Serverless%20Cloud%20Run%20Development/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%201%20image.jpg)  
+![Task 1 architecture](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5a784637ae711cfac95a76b3b88e63e3fcebc896/Serverless%20Cloud%20Run%20Development%20Challenge%20Lab/Serverless%20Cloud%20Run%20Dev%20Challenge%20Lab%20Task%201%20image.jpg)  
+  
 2. Using the available code, deploy the Billing Service.
 
 #### Assessment
