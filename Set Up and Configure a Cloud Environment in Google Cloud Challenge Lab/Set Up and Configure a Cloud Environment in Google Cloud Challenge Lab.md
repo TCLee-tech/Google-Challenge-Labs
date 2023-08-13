@@ -33,4 +33,4 @@ You need to help the team with some of their initial work on a new project. They
 As soon as you sit down at your desk and open your new laptop you receive the following request to complete these tasks. Good luck!
 
 ##### Environment
-https://github.com/TCLee-tech/Google-Challenge-Labs/blob/f9f78b3aa2ba9f7cd8cdee9e9a0c334448b4d1aa/Set%20Up%20and%20Configure%20a%20Cloud%20Environment%20in%20Google%20Cloud%20Challenge%20Lab/overview.png
+![overview](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/f9f78b3aa2ba9f7cd8cdee9e9a0c334448b4d1aa/Set%20Up%20and%20Configure%20a%20Cloud%20Environment%20in%20Google%20Cloud%20Challenge%20Lab/overview.png)
