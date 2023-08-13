@@ -45,11 +45,15 @@ Create a VPC called *griffin-dev-vpc* with the following subnets only:
 * *griffin-dev-mgmt*
   * IP address block: 192.168.32.0/20
 
-> Create a custom mode VPC. Only customs mode VPCs start with no subnets, giving you full control. Auto mode VPCs are created with one subnet per region.
-> `gcloud compute networks create griffin-dev-vpc --subnet-mode custom`
-> `gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20`
-> `gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20`
-> To verify, `gcloud compute networks list` and `gcloud compute networks subnets list --sort-by=NETWORK`. In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**
+> Solution:  
+> Create a custom mode VPC. Only customs mode VPCs start with no subnets, giving you full control. Auto mode VPCs are created with one subnet per region.  
+> `gcloud compute networks create griffin-dev-vpc --subnet-mode custom`  
+> `gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20`  
+> `gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20`  
+> To verify,
+>   * `gcloud compute networks list`
+>   * `gcloud compute networks subnets list --sort-by=NETWORK`.
+>   * In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
 
 <hr>
 
@@ -61,11 +65,15 @@ Create a VPC called *griffin-prod-vpc* with the following subnets only:
 * *griffin-prod-mgmt*
   * IP address block: 192.168.64.0/20
 
-> Create a custom mode VPC.
-> `gcloud compute networks create griffin-prod-vpc --subnet-mode custom`
-> `gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20`
-> `gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20`
-> To verify, `gcloud compute networks list` and `gcloud compute networks subnets list --sort-by=NETWORK`. In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**
+> Solution:  
+> Create a custom mode VPC.  
+> `gcloud compute networks create griffin-prod-vpc --subnet-mode custom`  
+> `gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20`  
+> `gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20`  
+> To verify,  
+>   * `gcloud compute networks list`  
+>   * `gcloud compute networks subnets list --sort-by=NETWORK`.  
+>   * In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
 
 <hr>
 
