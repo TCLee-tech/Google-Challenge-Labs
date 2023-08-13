@@ -34,3 +34,41 @@ As soon as you sit down at your desk and open your new laptop you receive the fo
 
 ##### Environment
 ![overview](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/f9f78b3aa2ba9f7cd8cdee9e9a0c334448b4d1aa/Set%20Up%20and%20Configure%20a%20Cloud%20Environment%20in%20Google%20Cloud%20Challenge%20Lab/overview.png)
+
+<hr>
+
+### Task 1. Create development VPC manually
+Create a VPC called *griffin-dev-vpc* with the following subnets only:
+
+* *griffin-dev-wp*
+  * IP address block: 192.168.16.0/20
+* *griffin-dev-mgmt*
+  * IP address block: 192.168.32.0/20
+
+> Create a custom mode VPC. Only customs mode VPCs start with no subnets, giving you full control. Auto mode VPCs are created with one subnet per region.
+> `gcloud compute networks create griffin-dev-vpc --subnet-mode custom`
+> `gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20`
+> `gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20`
+> To verify, `gcloud compute networks list` and `gcloud compute networks subnets list --sort-by=NETWORK`. In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**
+
+<hr>
+
+### Task 2. Create production VPC manually
+Create a VPC called *griffin-prod-vpc* with the following subnets only:
+
+* *griffin-prod-wp*
+  * IP address block: 192.168.48.0/20
+* *griffin-prod-mgmt*
+  * IP address block: 192.168.64.0/20
+
+> Create a custom mode VPC.
+> `gcloud compute networks create griffin-prod-vpc --subnet-mode custom`
+> `gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20`
+> `gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20`
+> To verify, `gcloud compute networks list` and `gcloud compute networks subnets list --sort-by=NETWORK`. In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**
+
+<hr>
+
+### Task 3. Create bastion host
+Create a bastion host with two network interfaces, one connected to *griffin-dev-mgmt* and the other connected to *griffin-prod-mgmt*. Make sure you can SSH to the host.
+
