@@ -93,7 +93,7 @@ A bastion host is a server (VM) used to access internal private networks from ou
 gcloud compute instances create griffin-bastion --zone=us-east1-b --machine-type=e2-medium --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt
 ```
 References:  
-- [Google bastion host](https://cloud.google.com/compute/docs/connect/ssh-using-bastion-host#gcloud_1)   
+- [Google bastion host](https://cloud.google.com/compute/docs/connect/ssh-using-bastion-host)   
 - [gcloud compute instances create](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)  
 
 Create a firewall rules to allow bastion host VM to accept SSH connections from internet:
@@ -117,7 +117,7 @@ CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
 GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
 FLUSH PRIVILEGES;
 
-These SQL statements create the worpdress database and create a user with access to the wordpress database.
+These SQL statements create the wordpress database and create a user with access to the wordpress database.
 
 You will use the username and password in task 6.
 
@@ -214,7 +214,7 @@ Note:
 - [sed stream editor commands](https://www.geeksforgeeks.org/sed-command-in-linux-unix-with-examples/)
 - -i argument for in-place editing
 - s/original string or regex/replacement [input file name]: substitute
-- g: global flag, replace all occurences
+- g: global flag, replace all occurrences
 - wp-env.yaml creates a PersistentVolumeClaim and a Secret object.
 
 <hr>
@@ -242,9 +242,8 @@ kubectl create -f wp-service.yaml
 To verify, 
 - `kubectl get deployments`
 - Either:
-  - In Google Cloud Console, go to Kubernetes Engine -> Services and Ingress ->
-copy wordpress External load balancer Endpoints' IP address.  
-  - `kubectl get services` and get the EXTERNAL-IP for wordpress LoadBalancer.
+  - In Google Cloud Console, go to Kubernetes Engine -> Services and Ingress -> copy wordpress External load balancer Endpoints' IP address.  
+  - or `kubectl get services` and copy the EXTERNAL-IP for wordpress LoadBalancer.
   - Open the external IP address in a new browser tab and ensure you see the WordPress site installer.
 
 Reference:
