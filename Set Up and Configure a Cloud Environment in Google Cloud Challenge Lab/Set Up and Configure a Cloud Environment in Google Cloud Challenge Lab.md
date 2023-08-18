@@ -45,16 +45,19 @@ Create a VPC called *griffin-dev-vpc* with the following subnets only:
 * *griffin-dev-mgmt*
   * IP address block: 192.168.32.0/20
 
-> Solution:  
-> If needed, `gcloud config set project [GCP Project ID]`
-> Create a custom mode VPC. Only customs mode VPCs start with no subnets, giving you full control. Auto mode VPCs are created with one subnet per region.  
-> `gcloud compute networks create griffin-dev-vpc --subnet-mode custom`  
-> `gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20`  
-> `gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20`  
-> To verify,
->   - `gcloud compute networks list`
->   - `gcloud compute networks subnets list --sort-by=NETWORK`.
->   - In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
+##### 🔴 Solution:  
+Create a custom mode VPC. Only customs mode VPCs start with no subnets, giving you full control. Auto mode VPCs are created with one subnet per region.  
+If needed, `gcloud config set project [GCP Project ID]`  
+```
+gcloud compute networks create griffin-dev-vpc --subnet-mode custom  
+gcloud compute networks subnets create griffin-dev-wp --network=griffin-dev-vpc --region=us-east1 --range=192.168.16.0/20  
+gcloud compute networks subnets create griffin-dev-mgmt --network=griffin-dev-vpc --region=us-east1 --range=192.168.32.0/20
+```
+
+To verify,
+- `gcloud compute networks list`
+- `gcloud compute networks subnets list --sort-by=NETWORK`.
+- In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
 
 <hr>
 
@@ -66,32 +69,41 @@ Create a VPC called *griffin-prod-vpc* with the following subnets only:
 * *griffin-prod-mgmt*
   * IP address block: 192.168.64.0/20
 
-> Solution:  
-> Create a custom mode VPC.  
-> `gcloud compute networks create griffin-prod-vpc --subnet-mode custom`  
-> `gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20`  
-> `gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20`  
-> To verify,  
->   - `gcloud compute networks list`  
->   - `gcloud compute networks subnets list --sort-by=NETWORK`  
->   - In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
+##### 🔴 Solution:  
+Create a custom mode VPC.  
+```
+gcloud compute networks create griffin-prod-vpc --subnet-mode custom  
+gcloud compute networks subnets create griffin-prod-wp --network=griffin-prod-vpc --region=us-east1 --range=192.168.48.0/20  
+gcloud compute networks subnets create griffin-prod-mgmt --network=griffin-prod-vpc --region=us-east1 --range=192.168.64.0/20
+```
+  
+To verify,  
+- `gcloud compute networks list`  
+- `gcloud compute networks subnets list --sort-by=NETWORK`  
+- In the Cloud console, nagivate to **Navigation menu > VPC network > VPC networks**  
 
 <hr>
 
 ### Task 3. Create bastion host
 Create a bastion host with two network interfaces, one connected to *griffin-dev-mgmt* and the other connected to *griffin-prod-mgmt*. Make sure you can SSH to the host.
-> Solution:
-> A bastion host is a server (VM) used to access internal private networks from outside. Connection to the bastion host is normally by SSH.
-> `gcloud compute instances create griffin-bastion --zone=us-east1-b --machine-type=e2-medium --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt`
 
-> [Google bastion host refernce:](https://cloud.google.com/compute/docs/connect/ssh-using-bastion-host#gcloud_1)
-> [gcloud compute instances create reference:](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
+##### 🔴 Solution:
+A bastion host is a server (VM) used to access internal private networks from outside. Connection to the bastion host is normally by SSH.
+```
+gcloud compute instances create griffin-bastion --zone=us-east1-b --machine-type=e2-medium --network-interface=network=griffin-dev-vpc,subnet=griffin-dev-mgmt --network-interface=network=griffin-prod-vpc,subnet=griffin-prod-mgmt
+```
+References:  
+- [Google bastion host](https://cloud.google.com/compute/docs/connect/ssh-using-bastion-host#gcloud_1)   
+- [gcloud compute instances create](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)  
 
-> Create a firewall rules to allow bastion host VM to accept SSH connections from internet:
-> `gcloud compute firewall-rules create griffin-dev-allow-ssh --network griffin-dev-vpc --allow tcp:22`
-> `gcloud compute firewall-rules create griffin-prod-allow-ssh --network griffin-prod-vpc --allow tcp:22`
-> [gcloud compute firewall-rules create reference](https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create)
-> tcp protocol, port 22 is Google's default allow for ssh connections.
+Create a firewall rules to allow bastion host VM to accept SSH connections from internet:
+```
+gcloud compute firewall-rules create griffin-dev-allow-ssh --network griffin-dev-vpc --allow tcp:22
+gcloud compute firewall-rules create griffin-prod-allow-ssh --network griffin-prod-vpc --allow tcp:22
+```
+References:  
+- [gcloud compute firewall-rules create](https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create)  
+- tcp protocol, port 22 is Google's default allow for ssh connections.  
 
 <hr>
 
@@ -109,43 +121,46 @@ These SQL statements create the worpdress database and create a user with access
 
 You will use the username and password in task 6.
 
-> Solution (a): Create a Cloud SQL Instance
-> In the Google Cloud Console, navigate to **Navigation menu > SQL**
-> Click **CREATE INSTANCE > Choose MySQL**
-> Enter Cloud SQL instance ID as **griffin-dev-db**
-> Enter a secure password in the **Password** field (remmeber it!).
-> Select the database version as **MySQL 8**
-> To **Choose a Cloud SQL edition**, choose **Development** (4vCPU, 16 GB RAM, 100 GB Storage, single zone) for **Enterprise** edition.
-> Select the **Multi zones (Highly available)** field for **us-east1 (South Carolina)** region.
-> Click **CREATE INSTANCE**
-> It takes a few minutes for the instance to be created. Once it is ready, you will see a green checkmark next to the instance name.
-> Click on the Cloud SQL instance. The **SQL Overview** page opens.
+##### 🔴  Solution (a): Create a Cloud SQL Instance
+- In the Google Cloud Console, navigate to **Navigation menu > SQL**
+- Click **CREATE INSTANCE > Choose MySQL**
+- Enter Cloud SQL instance ID as **griffin-dev-db**
+- Enter a secure password in the **Password** field (remmeber it!).
+- Select the database version as **MySQL 8**
+- To **Choose a Cloud SQL edition**, choose **Development** (4vCPU, 16 GB RAM, 100 GB Storage, single zone) for **Enterprise** edition.
+- Select the **Multi zones (Highly available)** field for **us-east1 (South Carolina)** region.
+- Click **CREATE INSTANCE**
+- It takes a few minutes for the instance to be created. Once it is ready, you will see a green checkmark next to the instance name.
+- Click on the Cloud SQL instance. The **SQL Overview** page opens.
 
-> If you are impatient, you can create the Kubernetes cluster (Task 5) in Cloud Shell while waiting for the Cloud SQL instance to be created.
+If you are impatient, you can create the Kubernetes cluster (Task 5) in Cloud Shell while waiting for the Cloud SQL instance to be created.
 
-> Solution (b): Create WordPress database and user
-> Run the following command to connect to the Cloud SQL instance: `gcloud sql connect griffin-dev-db --user=root --quiet`
-> When prompted, enter the root password.
-> At the SQL prompt, run the following SQL commands to create the WordPress database and user:
-> ```
-> CREATE DATABASE wordpress;
-> CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
-> GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
-> FLUSH PRIVILEGES;
-> ```
-> **exit** to close the SQL prompt.
-
-Navigation menu > SQL > Connections > Networking > Under **Instance IP Assignment** > Tick *Private IP* and select Network *griffin-dev-vpc*.
+##### 🔴 Solution (b): Create WordPress database and user
+- Run the following command to connect to the Cloud SQL instance: `gcloud sql connect griffin-dev-db --user=root --quiet`
+- When prompted, enter the root password.
+- At the SQL prompt, run the following SQL commands to create the WordPress database and user:
+```
+CREATE DATABASE wordpress;
+CREATE USER "wp_user"@"%" IDENTIFIED BY "stormwind_rules";
+GRANT ALL PRIVILEGES ON wordpress.* TO "wp_user"@"%";
+FLUSH PRIVILEGES;
+```
+- **exit** to close the SQL prompt.
 
 <hr>
 
 ### Task 5. Create Kubernetes cluster
 Create a 2 node cluster (e2-standard-4) called *griffin-dev*, in the *griffin-dev-wp* subnet, and in zone *us-east1-b*.
 
->Solution:
->`gcloud container clusters create griffin-dev --num-nodes=2 --machine-type=e2-standard-4 --network=griffin-dev-vpc --subnetwork=griffin-dev-wp --zone=us-east1-b`
-> To verify, `gcloud container clusters list` or **Navigation menu > Kubernetes Engine > Clusters**
-> `gcloud container clusters get-credentials griffin-dev --zone us-east1-b`
+##### 🔴 Solution:
+```
+gcloud container clusters create griffin-dev --num-nodes=2 --machine-type=e2-standard-4 --network=griffin-dev-vpc --subnetwork=griffin-dev-wp --zone=us-east1-b
+```
+- To verify,
+  - `gcloud container clusters list` or
+  - **Navigation menu > Kubernetes Engine > Clusters**
+
+- `gcloud container clusters get-credentials griffin-dev --zone us-east1-b`
 
 <hr>
 
@@ -169,28 +184,33 @@ kubectl create secret generic cloudsql-instance-credentials \
     --from-file key.json
 ```
 
->Solution:
-> `gsutil -m cp -r gs://cloud-training/gsp321/wp-k8s .`
-> `cd wp-k8s`
-> To configure username to *wp_user* and password to *stormwind_rules*, either use sed command:
-> `sed -i s/username_goes_here/wp_user/g wp-env.yaml`
-> `sed -i s/password_goes_here/stormwind_rules/g wp-env.yaml`
-> or nano editor:
->`nano wp-env.yaml`
-> replace username_goes_here with wp-user and password_goes_here with stormwind_rules
->`CTRL+O` to save, then `CTRL+X` to exit.
-> or click on "Open Editor" in Cloud Shell, and edit wp-env.yaml
-> If you want to verify changes made, `cat wp-env.yaml`
->`kubectl create -f wp-env.yaml`
->To create key for service account, and add to Kubernetes environment:
->```
->gcloud iam service-accounts keys create key.json \
->    --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
->kubectl create secret generic cloudsql-instance-credentials \
->    --from-file key.json
->```
+##### 🔴 Solution:
+- `gsutil -m cp -r gs://cloud-training/gsp321/wp-k8s .`
+- `cd wp-k8s`
+- To configure username to *wp_user* and password to *stormwind_rules*, you can use sed command:
+- ```
+  sed -i s/username_goes_here/wp_user/g wp-env.yaml
+  sed -i s/password_goes_here/stormwind_rules/g wp-env.yaml
+  ```
 
-note:
+- alternatively, you can use nano editor:
+  - `nano wp-env.yaml`
+  - replace *username_goes_here* with *wp-user* and *password_goes_here* with *stormwind_rules*
+  - `CTRL+O` to save, then `CTRL+X` to exit.  
+
+- or click on "Open Editor" in Cloud Shell, and edit wp-env.yaml
+
+- If you want to verify changes made, `cat wp-env.yaml`
+- `kubectl create -f wp-env.yaml`
+- To create key for service account, and add to Kubernetes environment:
+```
+gcloud iam service-accounts keys create key.json \
+    --iam-account=cloud-sql-proxy@$GOOGLE_CLOUD_PROJECT.iam.gserviceaccount.com
+kubectl create secret generic cloudsql-instance-credentials \
+    --from-file key.json
+```
+
+Note:
 - [sed stream editor commands](https://www.geeksforgeeks.org/sed-command-in-linux-unix-with-examples/)
 - -i argument for in-place editing
 - s/original string or regex/replacement [input file name]: substitute
@@ -213,42 +233,43 @@ After you create your WordPress deployment, create the service with *wp-service.
 Once the Load Balancer is created, you can visit the site and ensure you see the WordPress site installer.
 At this point the dev team will take over and complete the install and you move on to the next task.
 
->Solution:
-> `sed -i s/YOUR_SQL_INSTANCE/$(gcloud sql instances describe griffin-dev-db --format="value(connectionName)")/g wp-deployment.yaml`
-> `kubectl create -f wp-deployment.yaml`
-> To verify, `kubectl get deployments`
-> `kubectl create -f wp-service.yaml`
+##### 🔴 Solution:
+```
+sed -i s/YOUR_SQL_INSTANCE/$(gcloud sql instances describe griffin-dev-db --format="value(connectionName)")/g wp-deployment.yaml
+kubectl create -f wp-deployment.yaml
+kubectl create -f wp-service.yaml
+```
+To verify, 
+- `kubectl get deployments`
+- Either:
+  - In Google Cloud Console, go to Kubernetes Engine -> Services and Ingress ->
+copy wordpress External load balancer Endpoints' IP address.  
+  - `kubectl get services` and get the EXTERNAL-IP for wordpress LoadBalancer.
+  - Open the external IP address in a new browser tab and ensure you see the WordPress site installer.
 
-> To verify, 
-> Either: In Google Cloud Console, go to Kubernetes Engine -> Services and Ingress ->
-copy wordpress External load balancer Endpoints' IP address.
-> Or: `kubectl get services` and get the EXTERNAL-IP for wordpress LoadBalancer.
-> Open the external IP address in a new browser tab and ensure you see the WordPress site installer.
-
-note:
-- [View Cloud SQL instance information](https://cloud.google.com/sql/docs/mysql/instance-info)
+Reference:
+- [How to view info on Cloud SQL instance](https://cloud.google.com/sql/docs/mysql/instance-info)
 
 <hr>
 
 ### Task 8. Enable monitoring
 Create an uptime check for your WordPress development site.
 
->Solution:
-> An uptime check verifies that the WordPress development site is up and available.
-> In Google Cloud console, navigate to **Navigation menu > Monitoring**
-
-> In the left pane of Cloud Monitoring, click on **Uptime checks**, and then click **Create Uptime Check**.
-> For **Protocol**, leave as **HTTP**.
-> For **Resource Type**, leave as **URL**.
-> For **Hostname**, paste the External-IP of the wordpress LoadBalancer.
-> For **Path**, enter **/**.
-> Click **Continue**.
-> In Response Validation, accept the defaults and then click **Continue**.
-> In Alert & Notification, accept the defaults, and then click **Continue**.
-> For Title, type **WPress Uptime Check**.
-> Click **Test** to verify that your uptime check can connect to the resource.
-> When you see a green check mark everything can connect.
-> Click **Create**.
+##### 🔴 Solution:
+An uptime check verifies that the WordPress development site is up and available.
+- In Google Cloud console, navigate to **Navigation menu > Monitoring**
+- In the left pane of Cloud Monitoring, click on **Uptime checks**, and then click **Create Uptime Check**.
+- For **Protocol**, leave as **HTTP**.
+- For **Resource Type**, leave as **URL**.
+- For **Hostname**, paste the External-IP of the wordpress LoadBalancer.
+- For **Path**, enter **/**.
+- Click **Continue**.
+- In Response Validation, accept the defaults and then click **Continue**.
+- In Alert & Notification, accept the defaults, and then click **Continue**.
+- For Title, type **WPress Uptime Check**.
+- Click **Test** to verify that your uptime check can connect to the resource.
+- When you see a green check mark everything can connect.
+- Click **Create**.
 
 <hr>
 
@@ -256,11 +277,11 @@ Create an uptime check for your WordPress development site.
 You have an additional engineer starting and you want to ensure they have access to the project, so please go ahead and grant them the editor role to the project.
 The second user account for the lab represents the additional engineer.
 
->Solution:
-> In the Google Cloud console, navigate to **Navigation menu > IAM & Admin > IAM**.
-> Search for the second user (ID starts with student-xx-, allocated at start of lab) with "Viewer" role.
-> Click on pencil icon at end of row to edit.
-> In the pop-up to edit access to "qwiklabs-gcp-xxx" project for this Principal(student-xx-), select **Editor** Role under **Assign roles**.
-> Click **Save**.
-> Notice the change in role for this second user.
-> If you sign in to the second user account in a new browser tab, you will be able to change states.
+##### 🔴 Solution:
+- In the Google Cloud console, navigate to **Navigation menu > IAM & Admin > IAM**.
+- Search for the second user (ID starts with student-xx-, allocated at start of lab) with "Viewer" role.
+- Click on pencil icon at end of row to edit.
+- In the pop-up to edit access to "qwiklabs-gcp-xxx" project for this Principal(student-xx-), select **Editor** Role under **Assign roles**.
+- Click **Save**.
+- Notice the change in role for this second user.
+- If you sign in to the second user account in a new browser tab, you will be able to change states.
