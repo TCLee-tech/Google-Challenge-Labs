@@ -21,7 +21,7 @@ Some FancyStore, Inc. standards you should follow:
 
 - Allocate cost effective resource sizes. Projects are monitored and excessive resource use will result in the containing project's termination.
 
-Use the *e2-medium* machine type unless directed otherwise.
+- Use the *e2-medium* machine type unless directed otherwise.
 
 <hr>
 
@@ -40,11 +40,10 @@ There will be a few different projects that can be built and pushed.
 
 5. You will have to run Cloud Build (in that monolith folder) to build it, then push it up to GCR.
 
-6. Name your artifact as follows:
-
-  - GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
-  - Image name: *Monolith Identifier*
-  - Image version: 1.0.0
+6. Name your artifact as follows:  
+    - GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
+    - Image name: *Monolith Identifier*
+    - Image version: 1.0.0
 
 Hint:
 
@@ -67,8 +66,8 @@ Build the monolith container image using Cloud Build and push to Google Containe
 cd ~/monolith-to-microservices/monolith
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/"Monolith Identifier:1.0.0 ."
 ```
-To verify, in Cloud console, **Navigation menu > Container Registry > Images**.
-To view build history, **Navigation menu > Cloud Build > History**. Click on build ID to see details of build. From the build details page, click on **Execution Details** tab to see build image.
+To verify, in Cloud console, **Navigation menu > Container Registry > Images**.  
+To view build history, **Navigation menu > Cloud Build > History**. Click on build ID to see details of build. From the build details page, click on **Execution Details** tab to see build image.  
 
 <hr>
 
@@ -78,9 +77,9 @@ Now that you have the image created and sitting in the container registry, it's 
 You've been told to deploy all of your resources in the *ZONE* zone, so first you'll need to create a GKE cluster for it. Start with a 3 node cluster to begin with.
 
 1. Create your cluster as follows:
-  - Cluster name: *Cluster Name*
-  - Region: *REGION*
-  - Node count: 3
+    - Cluster name: *Cluster Name*
+    - Region: *REGION*
+    - Node count: 3
 
 **Hint:**
 
@@ -91,11 +90,11 @@ Now that you've built up an image, and have a cluster up and running, it's time 
 You'll need to deploy the image that you've built onto your cluster. This will get your application up and running, but it can't be accessed until you expose it to the outside world. Your team has told you that the application runs on port 8080, but you will need to expose this on a more consumer-friendly port 80.
 
 2. Create and expose your deployment as follows:
-  - Cluster name: *Cluster Name*
-  - Container name: *Monolith Identifier*
-  - Container version: 1.0.0
-  - Application port: 8080
-  - Externally accessible port: 80
+    - Cluster name: *Cluster Name*
+    - Container name: *Monolith Identifier*
+    - Container version: 1.0.0
+    - Application port: 8080
+    - Externally accessible port: 80
 
 Note: For purposes of this lab, exposure of the service has been simplified. Typically, you would use an API gateway to secure your public endpoints. Learn more about best practices in the [Best practices for microservices Guide](https://cloud.google.com/architecture/migrating-a-monolithic-app-to-microservices-gke#best_practices_for_microservices).
 
@@ -136,8 +135,8 @@ To deploy container image in GCR to GKE cluster:
 kubectl create deployment fancystore-monolith --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Monolith Identifier:1.0.0
 ```
 To verify deployment:
-`kubectl get deployment`
-To access container in GKE cluster from outside, create a Service (in this case, a Load Balancer that routes traffic from external 80 port to internal 8080 port):
+`kubectl get deployment`  
+To access container in GKE cluster from outside, create a Service (in this case, a Load Balancer that routes traffic from external 80 port to internal 8080 port):  
 ```
 kubectl expose deployment fancystore-monolith --type=LoadBalancer --port 80 --target-port 8080
 ```
@@ -170,21 +169,15 @@ Below is the set of services which need to be containerized.
 
 1. Navigate to the source roots mentioned below, and upload the artifacts that are created to the Google Container Registry with the metadata indicated:
 
-| Orders Microservice | Service root folder: ~/monolith-to-microservices/microservices/src/orders
-
-GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
-
-Image name: Orders Identifier
-
-Image version: 1.0.0 |
+| Orders Microservice | Service root folder: ~/monolith-to-microservices/microservices/src/orders |
 | --- | --- |
-| Products Microservice | Service root folder: ~/monolith-to-microservices/microservices/src/products
-
-GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
-
-Image name: Products Identifier
-
-Image version: 1.0.0 |
+| -> | GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT} |
+| -> | Image name: Orders Identifier |
+| -> | Image version: 1.0.0 |
+| **Products Microservice** | Service root folder: ~/monolith-to-microservices/microservices/src/products |
+| -> | GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT} |
+| -> | Image name: Products Identifier |
+| -> | Image version: 1.0.0 |
 
 2. Once these microservices have been containerized, and their images uploaded to the GCR, you should deploy and expose these services.
 
@@ -218,36 +211,28 @@ Deploy these new containers following the same process that you followed for the
 
 1. Create and expose your deployments as follows:
 
-| Orders Microservice | Cluster name: Cluster Name
-
-Container name: Orders Identifier
-
-Container version: 1.0.0
-
-Application port: 8081
-
-Externally accessible port: 80 |
+| Orders Microservice | Cluster name: Cluster Name |
 | --- | --- |
-| Products Microservice | Cluster name: Cluster Name
-
-Container name: Products Identifier
-
-Container version: 1.0.0
-
-Application port: 8082
-
-Externally accessible port: 80 |
+| -> | Container name: Orders Identifier | 
+| -> | Container version: 1.0.0 |
+| -> | Application port: 8081 |
+| -> | Externally accessible port: 80 |
+| **Products Microservice** | Cluster name: Cluster Name |
+| -> | Container name: Products Identifier |
+| -> | Container version: 1.0.0 |
+| -> | Application port: 8082 |
+| -> | Externally accessible port: 80 |
 
 NOTE: Please make note of the IP address of both the Orders and Products services once they have been exposed, you will need them in future steps.
 
 You can verify that the deployments were successful and that the services have been exposed by going to the following URLs in your browser:
-http://ORDERS_EXTERNAL_IP/api/orders
 
+http://ORDERS_EXTERNAL_IP/api/orders   
 http://PRODUCTS_EXTERNAL_IP/api/products
 
 You will see each service return a JSON string if the deployments were successful.
 
-Hint: Make sure your deployments are named Orders Identifier and Products Identifier, and that you see the services exposed on port 80.
+Hint: Make sure your deployments are named `Orders Identifier` and `Products Identifier`, and that you see the services exposed on port 80.
 
 ##### 🔴 Solution:  
 To expose Orders Microservice container:
@@ -258,10 +243,16 @@ To expose Products Microservice container:
 ```
 kubectl expose deployment fancystore-products --type=LoadBalancer --port 80 --target-port 8082
 ```
-To verify,
-http://ORDERS_EXTERNAL_IP/api/orders
-http://PRODUCTS_EXTERNAL_IP/api/products
+To verify, get the external IP of the microservices:
+```
+kubectl get services
+```
 
+Subsitute into the following urls and test in new browser tabs:
+```
+http://ORDERS_EXTERNAL_IP/api/orders    
+http://PRODUCTS_EXTERNAL_IP/api/products  
+```
 <hr>
 
 ### Task 5. Configure and deploy the Frontend microservice
@@ -273,11 +264,11 @@ Now that you have extracted both the Orders and Products microservice, you need 
 cd ~/monolith-to-microservices/react-app
 nano .env
 ```
-When the editor opens, your file should look like this:
-REACT_APP_ORDERS_URL=http://localhost:8081/api/orders
-REACT_APP_PRODUCTS_URL=http://localhost:8082/api/products
+When the editor opens, your file should look like this:  
+REACT_APP_ORDERS_URL=http://localhost:8081/api/orders  
+REACT_APP_PRODUCTS_URL=http://localhost:8082/api/products  
 
-2. Replace the Orders and Product microservice IP addresses so it matches below:
+2. Replace the Orders and Product microservice IP addresses so they match below:
 ```
 REACT_APP_ORDERS_URL=http://<ORDERS_IP_ADDRESS>/api/orders
 REACT_APP_PRODUCTS_URL=http://<PRODUCTS_IP_ADDRESS>/api/products
@@ -321,11 +312,11 @@ To verify, `gcloud container images list --repository=gcr.io/${GOOGLE_CLOUD_PROJ
 Deploy this container following the same process that you followed for the "Orders" and "Products" microservices.
 
 1. Create and expose your deployment as follows:
-  - Cluster name: Cluster Name
-  - Container name: Frontend Identifier
-  - Container version: 1.0.0
-  - Application port: 8080
-  - Externally accessible port: 80
+    - Cluster name: Cluster Name
+    - Container name: Frontend Identifier
+    - Container version: 1.0.0
+    - Application port: 8080
+    - Externally accessible port: 80
 
 2. You can verify that the deployment was successful and that the microservices have been properly exposed by hitting the IP address of the frontend service in your browser.
 
