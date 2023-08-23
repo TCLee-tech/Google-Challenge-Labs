@@ -102,7 +102,7 @@ Note: For purposes of this lab, exposure of the service has been simplified. Typ
 
 You should see the following:
 
-![Fancy Store web page]()
+![Fancy Store web page](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/b8a0d382a7735aa9631e1b8d6c7363379213bfe1/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/Fancy%20Store%20web%20page.png)
 
 **Hint:**
 
