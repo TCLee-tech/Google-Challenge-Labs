@@ -214,6 +214,8 @@ kubectl create deployment fancy-products-xxx --image=gcr.io/${GOOGLE_CLOUD_PRODU
 To verify, `kubectl get deployments`
 Or, **Navigation menu > Kubernetes Engine > Workloads** and make sure there is a "tick" mark and OK under **Status** for each workload (deployed container).
 
+![kubectl create deployments ok](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/6059006bddafc244d77c29e03fb69a5bad79beef/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/gke%20deployments%20ok.jpg)
+
 <hr>
 
 ### Task 4. Deploy the new microservices
@@ -264,6 +266,9 @@ Subsitute into the following urls and test in new browser tabs:
 http://ORDERS_EXTERNAL_IP/api/orders    
 http://PRODUCTS_EXTERNAL_IP/api/products  
 ```
+
+![Expose deployment ok](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/6059006bddafc244d77c29e03fb69a5bad79beef/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/GKE%20services%20ok.jpg)
+
 <hr>
 
 ### Task 5. Configure and deploy the Frontend microservice
