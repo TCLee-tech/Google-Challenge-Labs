@@ -353,3 +353,10 @@ Cut and paste the external IP address into a new browser tab to access the Front
 Or, **Navigation menu > Kubernetes Engine > Services and Ingress** and wait for a "tick" mark and OK under **Status** for fancy-frontend-xxx Service. Click on the Endpoint url link for the Frontend microservice.
 
 From the Frontend microservice webpage, click on the "Products" and "Orders" links to access the Orders and Products microservices.
+
+![Frontend microservice](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/528fba425b8e796d3dd43a81ea43e36995e14f79/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/Frontend%20microservice.jpg)
+
+![Orders microservice](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/528fba425b8e796d3dd43a81ea43e36995e14f79/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/Orders%20microservice.jpg)
+
+![Products microservice](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/528fba425b8e796d3dd43a81ea43e36995e14f79/Build%20a%20Website%20on%20Google%20Cloud%20Challenge%20Lab/Products%20microservice.jpg)
+
