@@ -15,7 +15,7 @@ You should first build, deploy, and test the Monolith, just to make sure that th
 
 Some FancyStore, Inc. standards you should follow:
 
-- Create your cluster in REGION
+- Create your cluster in REGION (eg. us-east4)
 
 - Naming is normally *team-resource*, e.g. an instance could be named **fancystore-orderservice1**.
 
@@ -42,7 +42,7 @@ There will be a few different projects that can be built and pushed.
 
 6. Name your artifact as follows:  
     - GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
-    - Image name: *Monolith Identifier*
+    - Image name: *Monolith Identifier, e.g. fancy-monolith-571*
     - Image version: 1.0.0
 
 Hint:
@@ -51,6 +51,18 @@ Make sure that you submit a build named *Monolith Identifier* with a version of 
 
 ##### 🔴 Solution:  
 
+Set GOOGLE_CLOUD_PROJECT environment variable:
+```
+export GOOGLE_CLOUD_PROJECT=$(gcloud config list --format 'value(core.project)')
+```
+(just in case) Set default region:
+```
+gcloud config set compute/zone ZONE           // given in Task 2 instructions
+```
+(just in case) Enable Containers API so that you can use GKE:
+```
+gcloud services enable container.googleapis.com
+```
 In Cloud Shell, clone the git repository containing the source codes and run the startup script to build the monolith application:
 ```
 git clone https://github.com/googlecodelabs/monolith-to-microservices
@@ -64,9 +76,9 @@ nvm install --lts
 Build the monolith container image using Cloud Build and push to Google Container Registry (GCR):
 ```
 cd ~/monolith-to-microservices/monolith
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/"Monolith Identifier:1.0.0 ."
+gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/Monolith Identifier:1.0.0 .
 ```
-To verify, in Cloud console, **Navigation menu > Container Registry > Images**.  
+To verify, in Cloud console, **Navigation menu > CI/CD > Container Registry > Images**.  
 To view build history, **Navigation menu > Cloud Build > History**. Click on build ID to see details of build. From the build details page, click on **Execution Details** tab to see build image.  
 
 <hr>
@@ -74,24 +86,24 @@ To view build history, **Navigation menu > Cloud Build > History**. Click on bui
 ### Task 2. Create a kubernetes cluster and deploy the application
 Now that you have the image created and sitting in the container registry, it's time to create a cluster to deploy it to.
 
-You've been told to deploy all of your resources in the *ZONE* zone, so first you'll need to create a GKE cluster for it. Start with a 3 node cluster to begin with.
+You've been told to deploy all of your resources in the *ZONE, e.g. us-east4-a* zone, so first you'll need to create a GKE cluster for it. Start with a 3 node cluster to begin with.
 
 1. Create your cluster as follows:
-    - Cluster name: *Cluster Name*
-    - Region: *REGION*
+    - Cluster name: *Cluster Name, e.g. fancy-cluster-494*
+    - Region: *REGION, e.g. us-east4*
     - Node count: 3
 
 **Hint:**
 
-Make sure your cluster is named *Cluster Name*, and is in the running state in *REGION*.
+Make sure your cluster is named *Cluster Name, e.g. fancy-cluster-494*, and is in the running state in *ZONE, e.g. us-east4-a*.
 
 Now that you've built up an image, and have a cluster up and running, it's time to deploy your application.
 
 You'll need to deploy the image that you've built onto your cluster. This will get your application up and running, but it can't be accessed until you expose it to the outside world. Your team has told you that the application runs on port 8080, but you will need to expose this on a more consumer-friendly port 80.
 
 2. Create and expose your deployment as follows:
-    - Cluster name: *Cluster Name*
-    - Container name: *Monolith Identifier*
+    - Cluster name: *Cluster Name, e.g. fancy-cluster-494*
+    - Container name: *Monolith Identifier, e.g. fancy-monolith-571*
     - Container version: 1.0.0
     - Application port: 8080
     - Externally accessible port: 80
@@ -106,20 +118,13 @@ You should see the following:
 
 **Hint:**
 
-Make sure your deployment is named *Monolith Identifier*, and that you have exposed the service on port 80, and mapped it to port 8080.
+Make sure your deployment is named *Monolith Identifier, e.g. fancy-monolith-571*, and that you have exposed the service on port 80, and mapped it to port 8080.
 
 ##### 🔴 Solution:  
-(just in case) Set default region:
-```
-gcloud config set compute/region REGION
-```
-(just in case) Enable Containers API so that you can use GKE:
-```
-gcloud services enable container.googleapis.com
-```
+
 Create a GKE cluster:
 ```
-gcloud container clusters create CLUSTER_NAME --region=REGION -- num-nodes=3
+gcloud container clusters create CLUSTER_NAME --zone=ZONE --num-nodes=3
 ```
 To verify VM nodes:
 ```
@@ -132,18 +137,21 @@ Read more:
 
 To deploy container image in GCR to GKE cluster:
 ```
-kubectl create deployment fancystore-monolith --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Monolith Identifier:1.0.0
+kubectl create deployment fancy-monolith-xxx --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Monolith Identifier:1.0.0
 ```
 To verify deployment:
 `kubectl get deployment`  
+
 To access container in GKE cluster from outside, create a Service (in this case, a Load Balancer that routes traffic from external 80 port to internal 8080 port):  
 ```
-kubectl expose deployment fancystore-monolith --type=LoadBalancer --port 80 --target-port 8080
+kubectl expose deployment fancy-monolith-xxx --type=LoadBalancer --port 80 --target-port 8080
 ```
 To get external IP assigned by GKE to Service resource:
 ```
-kubectl get service fancystore-monolith
+kubectl get service fancy-monolith-xxx
 ```
+or, **Navigation menu > Kubernetes Engine > Service and Ingress > Endpoints**
+
 Cut and paste external IP in a new browser tab to access FancyStore monolithic website.
 
 <hr>
@@ -172,37 +180,39 @@ Below is the set of services which need to be containerized.
 | Orders Microservice | Service root folder: ~/monolith-to-microservices/microservices/src/orders |
 | --- | --- |
 | -> | GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT} |
-| -> | Image name: Orders Identifier |
+| -> | Image name: Orders Identifier, e.g. fancy-orders-543 |
 | -> | Image version: 1.0.0 |
 | **Products Microservice** | Service root folder: ~/monolith-to-microservices/microservices/src/products |
 | -> | GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT} |
-| -> | Image name: Products Identifier |
+| -> | Image name: Products Identifier, e.g. fancy-products-352 |
 | -> | Image version: 1.0.0 |
 
 2. Once these microservices have been containerized, and their images uploaded to the GCR, you should deploy and expose these services.
 
-Hint: Make sure that you submit a build named Orders Identifier with a version of "1.0.0", AND a build named Products Identifier with a version of "1.0.0".
+Hint: Make sure that you submit a build named Orders Identifier (fancy-orders-xxx) with a version of "1.0.0", AND a build named Products Identifier (fancy-products-xxx) with a version of "1.0.0".
 
 ##### 🔴 Solution:  
 Build Orders Microservice container image and push to GCR:
 ```
-cd ~/monolith-to-microservices/microservices/src/orders
+cd ~/monolith-to-microservices/microservices/src/orders  
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/Orders Identifier:1.0.0 .
 ```
+Deploy Orders Microservice container image to GKE cluster:
+```
+kubectl create deployment fancy-orders-xxx --image=gcr.io/${GOOGLE_CLOUD_PRODUCT}/Orders Identifier:1.0.0
+```
+
 Build Products Microservice container image and push to GCR:
 ```
 cd ~/monolith-to-microservices/microservices/src/products
 gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/Products Identifier:1.0.0 .
 ```
-Deploy Orders Microservice container image to GKE cluster:
-```
-kubectl create deployment fancystore-orders --image=gcr.io/${GOOGLE_CLOUD_PRODUCT}/Orders Identifier:1.0.0
-```
 Deploy Products Microservice container image to GKE cluster:
 ```
-kubectl create deployment fancystore-products --image=gcr.io/${GOOGLE_CLOUD_PRODUCT}/Products Identifier:1.0.0
+kubectl create deployment fancy-products-xxx --image=gcr.io/${GOOGLE_CLOUD_PRODUCT}/Products Identifier:1.0.0
 ```
 To verify, `kubectl get deployments`
+Or, **Navigation menu > Kubernetes Engine > Workloads** and make sure there is a "tick" mark and OK under **Status** for each workload (deployed container).
 
 <hr>
 
@@ -211,14 +221,14 @@ Deploy these new containers following the same process that you followed for the
 
 1. Create and expose your deployments as follows:
 
-| Orders Microservice | Cluster name: Cluster Name |
+| Orders Microservice | Cluster name: Cluster Name, e.g. fancy-cluster-494 |
 | --- | --- |
-| -> | Container name: Orders Identifier | 
+| -> | Container name: Orders Identifier, e.g. fancy-orders-543 | 
 | -> | Container version: 1.0.0 |
 | -> | Application port: 8081 |
 | -> | Externally accessible port: 80 |
-| **Products Microservice** | Cluster name: Cluster Name |
-| -> | Container name: Products Identifier |
+| **Products Microservice** | Cluster name: Cluster Name, e.g. fancy-cluster-494 |
+| -> | Container name: Products Identifier, e.g. fancy-products-352 |
 | -> | Container version: 1.0.0 |
 | -> | Application port: 8082 |
 | -> | Externally accessible port: 80 |
@@ -232,21 +242,22 @@ http://PRODUCTS_EXTERNAL_IP/api/products
 
 You will see each service return a JSON string if the deployments were successful.
 
-Hint: Make sure your deployments are named `Orders Identifier` and `Products Identifier`, and that you see the services exposed on port 80.
+Hint: Make sure your deployments are named `Orders Identifier (fancy-orders-xxx)` and `Products Identifier (fancy-products-xxx)`, and that you see the services exposed on port 80.
 
 ##### 🔴 Solution:  
 To expose Orders Microservice container:
 ```
-kubectl expose deployment fancystore-orders --type=LoadBalancer --port 80 --target-port 8081
+kubectl expose deployment fancy-orders-xxx --type=LoadBalancer --port 80 --target-port 8081
 ```
 To expose Products Microservice container:
 ```
-kubectl expose deployment fancystore-products --type=LoadBalancer --port 80 --target-port 8082
+kubectl expose deployment fancy-products-xxx --type=LoadBalancer --port 80 --target-port 8082
 ```
 To verify, get the external IP of the microservices:
 ```
 kubectl get services
 ```
+Or, **Navigation menu > Kubernetes Engine > Services and Ingress** and make sure there is a "tick" mark and OK under **Status** for each external load balancer service. Copy the endpoints.
 
 Subsitute into the following urls and test in new browser tabs:
 ```
@@ -282,6 +293,8 @@ npm run build
 ##### 🔴 Solution:  
 Follow Task 5 instructions.
 
+If you want to verify, `cat .env`. Click on each displayed url link to open a new browser tab with the returned JSON string.
+
 <hr>
 
 ### Task 6. Create a containerized version of the Frontend microservice
@@ -291,7 +304,7 @@ Use Cloud Build to package up the contents of the Frontend service and push it u
 
 - Service root folder: ~/monolith-to-microservices/microservices/src/frontend
 - GCR Repo: gcr.io/${GOOGLE_CLOUD_PROJECT}
-- Image name: Frontend Identifier
+- Image name: Frontend Identifier, e.g. fancy-frontend-562
 - Image version: 1.0.0
 
 This process may take a few minutes, so be patient.
@@ -312,8 +325,8 @@ To verify, `gcloud container images list --repository=gcr.io/${GOOGLE_CLOUD_PROJ
 Deploy this container following the same process that you followed for the "Orders" and "Products" microservices.
 
 1. Create and expose your deployment as follows:
-    - Cluster name: Cluster Name
-    - Container name: Frontend Identifier
+    - Cluster name: Cluster Name, e.g. fancy-cluster-494
+    - Container name: Frontend Identifier, e.g. fancy-frontend-562
     - Container version: 1.0.0
     - Application port: 8080
     - Externally accessible port: 80
@@ -325,14 +338,18 @@ You will see the Fancy Store homepage, with links to the Products and Orders pag
 ##### 🔴 Solution:  
 To deploy Frontend Microservice container image to GKE cluster:
 ```
-gcloud create deployment fancystore-frontend --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Frontend Identifier:1.0.0
+kubectl create deployment fancy-frontend-xxx --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Frontend Identifier:1.0.0
 ```
 To expose the Frontend Microservice container:
 ```
-kubectl expose deployment fancystore-frontend --type=LoadBalancer --port 80 --target-port 8080
+kubectl expose deployment fancy-frontend-xxx --type=LoadBalancer --port 80 --target-port 8080
 ```
 To get the external IP assigned by GKE to the Frontend microservice:
 ```
-kubectl get service fancystore-frontend
+kubectl get service fancy-frontend-xxx
 ```
-Cut and paste the external IP address into a new browser tab to access the Frontend microservice. Click on the links to access the Orders and Products microservices.
+Cut and paste the external IP address into a new browser tab to access the Frontend microservice. 
+
+Or, **Navigation menu > Kubernetes Engine > Services and Ingress** and wait for a "tick" mark and OK under **Status** for fancy-frontend-xxx Service. Click on the Endpoint url link for the Frontend microservice.
+
+From the Frontend microservice webpage, click on the "Products" and "Orders" links to access the Orders and Products microservices.
