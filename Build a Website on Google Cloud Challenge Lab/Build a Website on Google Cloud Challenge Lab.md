@@ -51,15 +51,39 @@ Make sure that you submit a build named *Monolith Identifier* with a version of 
 
 ##### 🔴 Solution:  
 
-Set GOOGLE_CLOUD_PROJECT environment variable:
+To reduce typo errors with a value repeatedly used in Cloud Shell commands, set the lab-assigned Project ID as a GOOGLE_CLOUD_PROJECT environment variable:
 ```
 export GOOGLE_CLOUD_PROJECT=$(gcloud config list --format 'value(core.project)')
 ```
-(just in case) Set default region:
+To verify,
 ```
-gcloud config set compute/zone ZONE           // given in Task 2 instructions
+echo $GOOGLE_CLOUD_PROJECT
 ```
-(just in case) Enable Containers API so that you can use GKE:
+Set the lab-assigned zone as the default zone:
+```
+gcloud config set compute/zone ZONE           // ZONE given in Task 2 instructions
+```
+To verify,
+```
+gcloud config get-value compute/zone
+```
+:point_right: Alternatively, append the environment variables to a config file. You can set the environment variables using the "source" command each time a Cloud Shell terminal (VM) is opened. Environment variables are lost every time Cloud Shell is closed. A new VM is allocated whenever a new Shell terminal opens. Persist the config file by adding the "source" command to bash .profile file.
+```
+mkdir infraclass
+touch infraclass/config
+echo GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT >> ~/infraclass/config
+echo ZONE=$ZONE >> ~/infraclass/config
+nano .profile
+```
+Add the following line to the end of the .profile file:
+```
+source infraclass/config
+```
+Press **CTRL+O**, then **ENTER**. Press **CTRL+X** to exit nano editor.
+
+:point_up:
+
+Enable Containers API so that you can use GKE:
 ```
 gcloud services enable container.googleapis.com
 ```
@@ -86,7 +110,7 @@ To view build history, **Navigation menu > Cloud Build > History**. Click on bui
 ### Task 2. Create a kubernetes cluster and deploy the application
 Now that you have the image created and sitting in the container registry, it's time to create a cluster to deploy it to.
 
-You've been told to deploy all of your resources in the *ZONE, e.g. us-east4-a* zone, so first you'll need to create a GKE cluster for it. Start with a 3 node cluster to begin with.
+You've been told to deploy all of your resources in the *ZONE, e.g. us-east4-a* zone, so first you'll need to create a GKE cluster for it. Start with a 3-node cluster to begin with.
 
 1. Create your cluster as follows:
     - Cluster name: *Cluster Name, e.g. fancy-cluster-494*
@@ -295,6 +319,7 @@ REACT_APP_PRODUCTS_URL=http://<PRODUCTS_IP_ADDRESS>/api/products
 ```
 npm run build
 ```
+
 ##### 🔴 Solution:  
 Follow Task 5 instructions.
 
