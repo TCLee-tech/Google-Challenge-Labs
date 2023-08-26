@@ -49,7 +49,7 @@ Hint:
 
 Make sure that you submit a build named *Monolith Identifier* with a version of "1.0.0".
 
-##### 🔴 Solution:  
+##### 🔴 Task 1 Solution:  
 
 To reduce typo errors with a value repeatedly used in Cloud Shell commands, set the lab-assigned Project ID as a GOOGLE_CLOUD_PROJECT environment variable:
 ```
@@ -71,6 +71,8 @@ gcloud config get-value compute/zone
 ```
 mkdir infraclass
 touch infraclass/config
+GOOGLE_CLOUD_PORJECT=$(gcloud config list --format 'value(core.project)')
+ZONE=[lab-assigned zone]
 echo GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT >> ~/infraclass/config
 echo ZONE=$ZONE >> ~/infraclass/config
 nano .profile
@@ -80,6 +82,7 @@ Add the following line to the end of the .profile file:
 source infraclass/config
 ```
 Press **CTRL+O**, then **ENTER**. Press **CTRL+X** to exit nano editor.
+If you want to verify, close and re-open Cloud Shell. Type `echo $GOOGLE_CLOUD_PROJECT` and `echo $ZONE` to see the values of the environment variables.
 
 :point_up:
 
@@ -144,7 +147,7 @@ You should see the following:
 
 Make sure your deployment is named *Monolith Identifier, e.g. fancy-monolith-571*, and that you have exposed the service on port 80, and mapped it to port 8080.
 
-##### 🔴 Solution:  
+##### 🔴 Task 2 Solution:  
 
 Create a GKE cluster:
 ```
@@ -215,7 +218,7 @@ Below is the set of services which need to be containerized.
 
 Hint: Make sure that you submit a build named Orders Identifier (fancy-orders-xxx) with a version of "1.0.0", AND a build named Products Identifier (fancy-products-xxx) with a version of "1.0.0".
 
-##### 🔴 Solution:  
+##### 🔴 Task 3 Solution:  
 Build Orders Microservice container image and push to GCR:
 ```
 cd ~/monolith-to-microservices/microservices/src/orders  
@@ -270,7 +273,7 @@ You will see each service return a JSON string if the deployments were successfu
 
 Hint: Make sure your deployments are named `Orders Identifier (fancy-orders-xxx)` and `Products Identifier (fancy-products-xxx)`, and that you see the services exposed on port 80.
 
-##### 🔴 Solution:  
+##### 🔴 Task 4 Solution:  
 To expose Orders Microservice container:
 ```
 kubectl expose deployment fancy-orders-xxx --type=LoadBalancer --port 80 --target-port 8081
@@ -320,7 +323,7 @@ REACT_APP_PRODUCTS_URL=http://<PRODUCTS_IP_ADDRESS>/api/products
 npm run build
 ```
 
-##### 🔴 Solution:  
+##### 🔴 Task 5 Solution:  
 Follow Task 5 instructions.
 
 If you want to verify, `cat .env`. Click on each displayed url link to open a new browser tab with the returned JSON string.
@@ -341,7 +344,7 @@ This process may take a few minutes, so be patient.
 
 Hint: Make sure that you submit a build named Frontend Identifier with a version of "1.0.0".
 
-##### 🔴 Solution:  
+##### 🔴 Task 6 Solution:  
 Build Frontend Microservice container image and push to GCR:
 ```
 cd ~/monolith-to-microservices/microservices/src/frontend
@@ -365,7 +368,7 @@ Deploy this container following the same process that you followed for the "Orde
 
 You will see the Fancy Store homepage, with links to the Products and Orders pages powered by your new microservices.
 
-##### 🔴 Solution:  
+##### 🔴 Task 7 Solution:  
 To deploy Frontend Microservice container image to GKE cluster:
 ```
 kubectl create deployment fancy-frontend-xxx --image=gcr.io/${GOOGLE_CLOUD_PROJECT}/Frontend Identifier:1.0.0
