@@ -160,7 +160,7 @@ gcloud container clusters create griffin-dev --num-nodes=2 --machine-type=e2-sta
   - `gcloud container clusters list` or
   - **Navigation menu > Kubernetes Engine > Clusters**
 
-- `gcloud container clusters get-credentials griffin-dev --zone us-east1-b`
+- If Cloud Shell loses connection to the Kubernetes cluster for any reason and you need to re-authenticate, use `gcloud container clusters get-credentials griffin-dev --zone us-east1-b`
 
 <hr>
 
