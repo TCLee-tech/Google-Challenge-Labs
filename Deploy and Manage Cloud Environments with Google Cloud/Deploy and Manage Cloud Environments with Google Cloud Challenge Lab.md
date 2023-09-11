@@ -9,6 +9,7 @@ Antern has the following resources that need to be migrated, copied, or recreate
 - Containerized microservices application code to deploy on GKE (with reported reliability issues during testing that need to be troubleshooted)  
 - A VPC network with two subnetworks and firewalls that need to be created to connect new resources together  
 - IAM users across multiple projects that need to be granted the proper permissions and roles on specific resources  
+
 You are tasked with helping Cymbal Direct achieve these goals.
 
 <br>
@@ -30,8 +31,8 @@ To complete this sub-task you must complete the following steps:
 Database Migration Services require the [Database Migration API](https://cloud.google.com/database-migration/docs/reference/rest) and the [Service Networking API](https://cloud.google.com/service-infrastructure/docs/service-networking/reference/rest) to be enabled in order to function. You must enable these APIs for your project.
 
 :red_circle: :red_circle: **Solution** :red_circle: :red_circle:  
-**Navigation menu > APIs & Services >** Search for **Database Migration API >** Click on **Enable**
-Repeat search. This time for **Service Networking API** and enable it.
+**Navigation menu > APIs & Services >** Search for **Database Migration API >** Click on **Enable**  
+Repeat search for API. This time for **Service Networking API** and enable it.
 
 2. Upgrade the target databases on the `antern-postgresql-vm` virtual machine with the `pglogical` database extension.  
   
