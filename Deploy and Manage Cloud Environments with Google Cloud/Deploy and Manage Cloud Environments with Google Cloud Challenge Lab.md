@@ -10,7 +10,7 @@ Antern has the following resources that need to be migrated, copied, or recreate
 - A VPC network with two subnetworks and firewalls that need to be created to connect new resources together  
 - IAM users across multiple projects that need to be granted the proper permissions and roles on specific resources  
 
-You are tasked with helping Cymbal Direct achieve these goals.
+You are tasked with helping Cymbal Direct achieve these goals.  
 
 <br>
 
@@ -24,23 +24,38 @@ In this task you must migrate the stand-alone PostgreSQL `orders` database runni
 
 In this sub-task you must prepare the stand-alone PostgreSQL database so that it satisfies the requirements for migration by Database Migration Services.
 
-To complete this sub-task you must complete the following steps:
+To complete this sub-task you must complete the following steps:  
 
 1. Enable the Google Cloud APIs required for Database Migration Services.  
 
 Database Migration Services require the [Database Migration API](https://cloud.google.com/database-migration/docs/reference/rest) and the [Service Networking API](https://cloud.google.com/service-infrastructure/docs/service-networking/reference/rest) to be enabled in order to function. You must enable these APIs for your project.
 
-:red_circle: :red_circle: **Solution** :red_circle: :red_circle:  
+:red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:    
 **Navigation menu > APIs & Services >** Search for **Database Migration API >** Click on **Enable**  
-Repeat search for API. This time for **Service Networking API** and enable it.
+Repeat search for API. This time for **Service Networking API** and enable it.  
+
 
 2. Upgrade the target databases on the `antern-postgresql-vm` virtual machine with the `pglogical` database extension.  
   
-You must install and configure the **pglogical** database extension on the stand-alone PostgreSQL database on the `antern-postgresql-vm` Compute Instance VM. The pglogical database extension package that you must install is named `postgresql-13-pglogical`.
+You must install and configure the **pglogical** database extension on the stand-alone PostgreSQL database on the `antern-postgresql-vm` Compute Instance VM. The pglogical database extension package that you must install is named `postgresql-13-pglogical`.  
 
-To complete the configuration of the **pglogical** database extension you must edit the PostgreSQL configuration file `/etc/postgresql/13/main/postgresql.conf` to enable the **pglogical** database extension and you must edit the `/etc/postgresql/13/main/pg_hba.conf` to allow access from all hosts.
+:red_circle: :red_circle: **Solution to sub-task 2a** :red_circle: :red_circle:    
+SSH into the `antern-postgresql-vm`  
 
-:red_circle: :red_circle: **Solution** :red_circle: :red_circle:    
+1. In the Google Cloud Console, on the **Navigation menu** (Navigation menu icon), click **Compute Engine > VM instances**.
+
+2. In the entry for `antern-postgresql-vm`, click **SSH**.
+
+3. If prompted, click **Authorize**.
+
+4. In the SSH terminal, install the pglogical database extension:
+```
+sudo apt install postgresql-13-pglogical
+```
+
+To complete the configuration of the **pglogical** database extension you must edit the PostgreSQL configuration file `/etc/postgresql/13/main/postgresql.conf` to enable the **pglogical** database extension and you must edit the `/etc/postgresql/13/main/pg_hba.conf` to allow access from all hosts.  
+
+:red_circle: :red_circle: **Solution to sub-task 2b** :red_circle: :red_circle:    
 
 ```
 sudo su - postgres -c "gsutil cp gs://cloud-training/gsp918/pg_hba_append.conf ."
@@ -62,3 +77,11 @@ Note:
 - `cat pg_hba_append.conf >> /etc/postgresql/13/main/pg_hba.conf` is a command to join/add pg_hba_append.conf to the end of /etc/postgresql/13/main/pg_hba.conf file.
 - whenever you make changes to the config files on a Linux system, you need to restart the services (in this case, postgresql) so that they re-read the config files and apply the changes.
 - [pglogical](https://github.com/2ndQuadrant/pglogical) is a PostgreSQL extension that provides logical streaming replication, using a pub/sub model.
+
+3. Create a dedicated user for database migration on the stand-alone database.
+The new user that you create on the stand-alone PostgreSQL installation on the `antern-postgresql-vm` virtual machine must be configured using the following user name and password:
+
+  - **Migration user name** : `Postgres Migration Username`
+
+  - **Migration user password** : `DMS_1s_cool!`
+
