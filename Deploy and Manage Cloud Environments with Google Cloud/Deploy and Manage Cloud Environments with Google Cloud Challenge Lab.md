@@ -39,3 +39,26 @@ Repeat search for API. This time for **Service Networking API** and enable it.
 You must install and configure the **pglogical** database extension on the stand-alone PostgreSQL database on the `antern-postgresql-vm` Compute Instance VM. The pglogical database extension package that you must install is named `postgresql-13-pglogical`.
 
 To complete the configuration of the **pglogical** database extension you must edit the PostgreSQL configuration file `/etc/postgresql/13/main/postgresql.conf` to enable the **pglogical** database extension and you must edit the `/etc/postgresql/13/main/pg_hba.conf` to allow access from all hosts.
+
+:red_circle: :red_circle: **Solution** :red_circle: :red_circle:    
+
+```
+sudo su - postgres -c "gsutil cp gs://cloud-training/gsp918/pg_hba_append.conf ."
+sudo su - postgres -c "gsutil cp gs://cloud-training/gsp918/postgresql_append.conf ."
+sudo su - postgres -c "cat pg_hba_append.conf >> /etc/postgresql/13/main/pg_hba.conf"
+sudo su - postgres -c "cat postgresql_append.conf >> /etc/postgresql/13/main/postgresql.conf"
+sudo systemctl restart postgresql@13-main
+```
+Note: 
+- Above commands are from [Migrate to Cloud SQL for PostgreSQL using Database Migration Service](https://www.cloudskillsboost.google/focuses/22792?parent=catalog) quest.
+- `sudo` is acronym for superuser do. Allows you to issue a single command as the root user or another user without a need to change login identity.
+- `su` is acronym for switch user or substitute user.
+- `su - postgres` means to switch to postgres user.
+- `-c` is flag to issue command
+- [gsutil](https://cloud.google.com/storage/docs/gsutil) is Google's legacy Cloud Storage CLI tool. Deals with buckets and objects.
+- `cp` is copy command
+- `gsutil cp gs://cloud-training/gsp918/pg_hba_append.conf .` is a command to copy configuration file from google storage to current location.
+- `cat` is command to concatenate (join).
+- `cat pg_hba_append.conf >> /etc/postgresql/13/main/pg_hba.conf` is a command to join/add pg_hba_append.conf to the end of /etc/postgresql/13/main/pg_hba.conf file.
+- whenever you make changes to the config files on a Linux system, you need to restart the services (in this case, postgresql) so that they re-read the config files and apply the changes.
+- [pglogical](https://github.com/2ndQuadrant/pglogical) is a PostgreSQL extension that provides logical streaming replication, using a pub/sub model.
