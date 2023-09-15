@@ -31,8 +31,9 @@ To complete this sub-task you must complete the following steps:
 Database Migration Services require the [Database Migration API](https://cloud.google.com/database-migration/docs/reference/rest) and the [Service Networking API](https://cloud.google.com/service-infrastructure/docs/service-networking/reference/rest) to be enabled in order to function. You must enable these APIs for your project.
 
 :red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:    
-**Navigation menu > APIs & Services >** Search for **Database Migration API >** Click on **Enable**  
-Repeat search for API. This time for **Service Networking API** and enable it.  
+Log in using the Antern Owner Username.  
+In the Search Bar at the top of the Google Cloud Console, search for **Database Migration API**. Select the **Database Migration API** option under Marketplace. Click on **ENABLE**  
+Repeat search for **Service Networking API** and enable it.  
 
 
 2. Upgrade the target databases on the `antern-postgresql-vm` virtual machine with the `pglogical` database extension.  
@@ -42,9 +43,9 @@ You must install and configure the **pglogical** database extension on the stand
 :red_circle: :red_circle: **Solution to sub-task 2a** :red_circle: :red_circle:    
 SSH into the `antern-postgresql-vm`  
 
-1. In the Google Cloud Console, on the **Navigation menu** (Navigation menu icon), click **Compute Engine > VM instances**.
+1. In the Google Cloud Console, on the **Navigation menu**, click **Compute Engine > VM instances**.
 
-2. In the entry for `antern-postgresql-vm`, click **SSH**.
+2. For the `antern-postgresql-vm` VM instance, select **SSH**.
 
 3. If prompted, click **Authorize**.
 
@@ -57,6 +58,7 @@ To complete the configuration of the **pglogical** database extension you must e
 
 :red_circle: :red_circle: **Solution to sub-task 2b** :red_circle: :red_circle:    
 
+In the SSH terminal,
 ```
 sudo su - postgres -c "gsutil cp gs://cloud-training/gsp918/pg_hba_append.conf ."
 sudo su - postgres -c "gsutil cp gs://cloud-training/gsp918/postgresql_append.conf ."
@@ -82,7 +84,7 @@ Note:
 3. Create a dedicated user for database migration on the stand-alone database.
 The new user that you create on the stand-alone PostgreSQL installation on the `antern-postgresql-vm` virtual machine must be configured using the following user name and password:
 
-    - **Migration user name** : `Postgres Migration Username`
+    - **Migration user name** : `Postgres Migration Username, e.g. migration_admin`
 
     - **Migration user password** : `DMS_1s_cool!`
 
@@ -94,7 +96,7 @@ psql
 ```
 In **psql**, create a new user with the replication role:
 ```
-CREATE USER [Postgre Migration Username assigned for your lab] PASSWORD 'DMS_1s_cool!';
+CREATE USER [Postgre Migration Username] PASSWORD 'DMS_1s_cool!';   //change [Postgre Migration Username] to that assigned by lab
 ALTER DATABASE orders OWNER TO [Postgre Migration Username];
 ALTER ROLE [Postgre Migration Username] WITH REPLICATION;
 ```
@@ -111,7 +113,7 @@ CREATE EXTENSION pglogical;
 \c postgres;
 CREATE EXTENSION pglogical;
 ```
-If you want to list the PostgreSQL databases on the `antern-postgresql-vm` VM, use `\l`.    
+List the PostgreSQL databases on the `antern-postgresql-vm` VM using `\l` to confirm that there are only `orders` and `postgres` databases to migrate.    
 
 In **psql**, grant permissions to the `pglogical` schema and tables for the `orders` database:
 ```
@@ -153,14 +155,9 @@ In **psql**, grant permissions to the `public` schema and tables for the `orders
 ```
 GRANT USAGE ON SCHEMA public TO migration_admin;
 GRANT ALL ON SCHEMA public TO migration_admin;
-GRANT SELECT ON public.distribution_centers TO migration_admin;
-GRANT SELECT ON public.inventory_items TO migration_admin;
-GRANT SELECT ON public.order_items TO migration_admin;
-GRANT SELECT ON public.products TO migration_admin;
-GRANT SELECT ON public.users TO migration_admin;
 ```
 
-5. The Database Migration Service requires all tables to be migrated to have a primary key. Once you have granted the user the required privileges, run the following to add a primary key to the inventory_items table and exit psql.
+5. The Database Migration Service requires all tables to be migrated to have a primary key. Once you have granted the user the required privileges, run the following to add a primary key to the `inventory_items` table and exit psql.
 ```
 ALTER TABLE public.inventory_items ADD PRIMARY KEY(id);
 \q 
@@ -168,7 +165,28 @@ exit
 ```
 > Note: The detailed prerequisites for migrating a stand-alone PostgreSQL database to Cloud SQL for PostgreSQL are provided in the suggestion links in the Cloud Console GUI for Database Migration Services. Should you need some help on the detailed steps you must take, you may refer to that documentation, or you can look at the detailed steps in the migration lab that is part of this quest.
 
-:red_circle: :red_circle: **Solution to sub-task 5** :red_circle: :red_circle:  
+:red_circle: :red_circle: **Solution to sub-task 5** :red_circle: :red_circle:   
+
+Make the [Postgre Migration Username, i.e. migration_admin] user the owner of the tables in the `orders` database, so that you can edit the source data:  
+
+```
+\c orders;
+\dt
+ALTER TABLE public.distribution_centers OWNER TO migration_admin;
+ALTER TABLE public.inventory_items OWNER TO migration_admin;
+ALTER TABLE public.order_items OWNER TO migration_admin;
+ALTER TABLE public.products OWNER TO migration_admin;
+ALTER TABLE public.users OWNER TO migration_admin;
+\dt
+```
+
+Then add a primary key to the `inventory_items` table and exit psql:
+```
+ALTER TABLE public.inventory_items ADD PRIMARY KEY(id);
+\q 
+exit
+```
+
 - Run command provided in instructions above.
 - `\q` is to quit **psql**
 - `exit` is to exit postgres user session
@@ -197,14 +215,16 @@ Second, create the connection profile:
   - Click **+ Create Profile**.
   - For **Database engine**, select **PostgreSQL**.
   - For **Connection profile name**, enter **postgres-vm**.
-  - For **Hostname or IP address**, enter the internal IP for the PostgreSQL source instance that you copied in the previous task (e.g., 10.128.0.2)
+  - For **Hostname or IP address**, enter the internal IP for the PostgreSQL source instance that you copied in the previous task (e.g., 10.138.0.2)
   - For **Port**, enter **5432**.
   - For **Username**, enter **migration_admin**.
   - For **Password**, enter **DMS_1s_cool!**.
-  - For **Region** select [region].
+  - For **Region** select [region - during lab, copy from Task 2 below].
   - For all other values leave the defaults.
   - Click **Create**.
 A new connection profile named **postgres-vm** will appear in the Connections profile list.
+
+<br>
 
 2. Create a new continuous Database Migration Service job.
 As part of the migration job configuration, make sure that you specify the following properties for the destination Cloud SQL instance:
@@ -240,32 +260,32 @@ As part of the migration job configuration, make sure that you specify the follo
 
 (ii) Define the source database instance
   - For **Source connection profile**, select **postgres-vm**.
-  - Leave the defaults for the other settings.
   - Click **Save & Continue**.
 
 (iii) Create a new destination database instance
-  - For **Destination Instance ID**, enter `Migrated Cloud SQL for PostgreSQL Instance ID`.
+  - For **Destination Instance ID**, enter `Migrated Cloud SQL for PostgreSQL Instance ID - assigned at start of lab`.
   - For **Root password**, enter **supersecret!**.
   - For **Database version**, select **Cloud SQL for PostgreSQL 13**.
-  - In **Choose region and zone** section, select **Single zone** and select [zone] as primary zone.
-  - For **Instance connectivity**, select **Private IP** and **Public IP**.
+  - In **Choose region and zone** section, select **Single zone** for Zonal availability and leave Primary zone as any.
+  - For **Connections**, select **Private IP** and **Public IP**.
   - Leave **Associated networking VPC to peer** as **default**
-  - Select **Use an automatically allocated IP range**.
-  - Leave the defaults for the other settings.
+  - Leave **Use an automatically allocated IP range** selected.
   - Click **Allocate & Connect**.
+
   - For **Machine type**, check **1 vCPU, 3.75 GB**
-  - For **Storage type**, select **SSD**
+  - For **Storage type**, leave **SSD** selected
   - For **Storage capacity**, select **10 GB**
   - Click **Create & Continue**.
-  - If prompted to confirm, click **Create Destination & Continue**.
+  - If prompted to confirm, click **CREATE DESTINATION AND CONTINUE**.
 
 (iv) Define connectivity method
   - For **Connectivity method**, select **VPC peering**.
-  - For **VPC**, select **default**.
+  - For **VPC**, leave as **default** selected.  
+  > If you see "The destination instance creation must finish before you complete this step. This can take a few minutes. In the meantime, choose how to connect or save and exit and return later." message, the **Configure & Continue** button is disabled. Wait.
   - When you see an updated message that "Instance was created. Define the connectivity method, then Configure & Continue.", click **Configure & Continue**.
 
 (v) Edit source `pg_hba.conf` PostgreSQL configuration file to allow Database Migration Service to access from VPC IP address.
-  - In the Google Cloud Console, **Navigation menu** > **VPC network** > **VPC network peering** and right-click to open in a new tab.
+  - In the Google Cloud Console, **Navigation menu** > **VPC network** > right-click **VPC network peering** to open in a new tab.
   - Click on the `servicenetworking-googleapis-com` entry.
   - In the **Imported routes** tab, select and copy the `Destination IP range` (e.g. 10.107.176.0/24).
   - In a SSH terminal for the `antern-postgresql-vm` instance, edit the `pg_hba.conf` file:
@@ -288,7 +308,7 @@ As part of the migration job configuration, make sure that you specify the follo
   - Click **Test Job**.
   - If you get a tick mark and "Your migration job test was successful", click **Create & Start Job**.
   - If prompted to confirm, click **Create & Start**.
-  - to review the status of the continuous migration job,
+  - to verify and review the status of the continuous migration job,
       - In the Google Cloud Console, **Navigation menu** > **Database Migration** > **Migration jobs**.
   - Click the migration job **vm-to-cloudsql** to see the details page.
   - Review the migration job status.
@@ -304,7 +324,7 @@ In this task, you must complete the migration by promoting the Cloud SQL for Pos
 
 - Google Cloud Console > **Navigation menu** > **Database Migration** > **Migration jobs**.
 - Click the migration job name **vm-to-cloudsql** to see the details page.
-- Click **Promote**.
+- Select **PROMOTE** at top of page.
 - If prompted to confirm, click **Promote**.
 - to verify, Google Cloud Console > **Navigation menu** > **Databases** > **SQL**. Notice that `Migrated Cloud SQL for PostgreSQL Instance ID` is a PostgreSQL external primary instance.
 
@@ -323,6 +343,15 @@ Now that the database has been migrated to a Cloud SQL for PostgreSQL instance, 
 3. Change the **Cymbal Editor** user role from **Viewer** to **Editor**. Their username is `Cymbal Editor username`.
 
 :red_circle: :red_circle: **Solution to Task 2** :red_circle: :red_circle:  
+
+ - **Navigation menu** > **SQL** > click on the `Destination Instance ID, e.g. corp-postgres29`  click on **Users** on the menu on the left. 
+    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-00-2ff78e7fdff7@qwiklabs.net, assigned to **Antern Editor** during lab.
+    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-02-9b295853bcee@qwiklabs.net, assigned to **Cymbal Owner** during lab.
+  
+  - **Navigation menu** > **IAM & Admin** > **IAM**. 
+    - Look for the Principal that match the username of **Cymbal Editor**. The role should be displayed as **Viewer**. Click on the pencil icon to edit the role. Change the role to **Editor**. Click **Save**.
+    - Look for the Principal that match the username of **Cymbal Owner**. The role should be displayed as **Cloud SQL Instance User**. Click on the pencil icon to edit the role. Type **Cloud SQL Admin** in the filter and select it. Click **Save**.
+
 
 <hr>
 
