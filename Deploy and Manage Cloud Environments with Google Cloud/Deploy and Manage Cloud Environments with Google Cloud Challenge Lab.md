@@ -78,10 +78,295 @@ Note:
 - whenever you make changes to the config files on a Linux system, you need to restart the services (in this case, postgresql) so that they re-read the config files and apply the changes.
 - [pglogical](https://github.com/2ndQuadrant/pglogical) is a PostgreSQL extension that provides logical streaming replication, using a pub/sub model.
 
+
 3. Create a dedicated user for database migration on the stand-alone database.
 The new user that you create on the stand-alone PostgreSQL installation on the `antern-postgresql-vm` virtual machine must be configured using the following user name and password:
 
-  - **Migration user name** : `Postgres Migration Username`
+    - **Migration user name** : `Postgres Migration Username`
 
-  - **Migration user password** : `DMS_1s_cool!`
+    - **Migration user password** : `DMS_1s_cool!`
 
+:red_circle: :red_circle: **Solution to sub-task 3** :red_circle: :red_circle:  
+In the SSH terminal for `antern-postgresql-vm`, launch the **psql** command-line tool:
+```
+sudo su - postgres
+psql
+```
+In **psql**, create a new user with the replication role:
+```
+CREATE USER [Postgre Migration Username assigned for your lab] PASSWORD 'DMS_1s_cool!';
+ALTER DATABASE orders OWNER TO [Postgre Migration Username];
+ALTER ROLE [Postgre Migration Username] WITH REPLICATION;
+```
+
+
+4. Grant that user the required privileges and permissions for databases to be migrated.
+Database Migration Services require that the migration user has privileges to specific schemata and relations of the target databases for migration, in this case that is the `orders` and `postgres` databases.
+
+:red_circle: :red_circle: **Solution to sub-task 4** :red_circle: :red_circle:  
+In **psql**, add the `pglogical` database extension to the `orders` and `postgres` databases.  
+```
+\c orders;
+CREATE EXTENSION pglogical;
+\c postgres;
+CREATE EXTENSION pglogical;
+```
+If you want to list the PostgreSQL databases on the `antern-postgresql-vm` VM, use `\l`.    
+
+In **psql**, grant permissions to the `pglogical` schema and tables for the `orders` database:
+```
+\c orders;
+GRANT USAGE ON SCHEMA pglogical TO migration_admin;
+GRANT ALL ON SCHEMA pglogical TO migration_admin;
+GRANT SELECT ON pglogical.tables TO migration_admin;
+GRANT SELECT ON pglogical.depend TO migration_admin;
+GRANT SELECT ON pglogical.local_node TO migration_admin;
+GRANT SELECT ON pglogical.local_sync_status TO migration_admin;
+GRANT SELECT ON pglogical.node TO migration_admin;
+GRANT SELECT ON pglogical.node_interface TO migration_admin;
+GRANT SELECT ON pglogical.queue TO migration_admin;
+GRANT SELECT ON pglogical.replication_set TO migration_admin;
+GRANT SELECT ON pglogical.replication_set_seq TO migration_admin;
+GRANT SELECT ON pglogical.replication_set_table TO migration_admin;
+GRANT SELECT ON pglogical.sequence_state TO migration_admin;
+GRANT SELECT ON pglogical.subscription TO migration_admin;
+```
+In **psql**, grant permissions to the `pglogical` schema and tables for the `postgres` database:
+```
+\c postgres;
+GRANT USAGE ON SCHEMA pglogical TO migration_admin;
+GRANT ALL ON SCHEMA pglogical TO migration_admin;
+GRANT SELECT ON pglogical.tables TO migration_admin;
+GRANT SELECT ON pglogical.depend TO migration_admin;
+GRANT SELECT ON pglogical.local_node TO migration_admin;
+GRANT SELECT ON pglogical.local_sync_status TO migration_admin;
+GRANT SELECT ON pglogical.node TO migration_admin;
+GRANT SELECT ON pglogical.node_interface TO migration_admin;
+GRANT SELECT ON pglogical.queue TO migration_admin;
+GRANT SELECT ON pglogical.replication_set TO migration_admin;
+GRANT SELECT ON pglogical.replication_set_seq TO migration_admin;
+GRANT SELECT ON pglogical.replication_set_table TO migration_admin;
+GRANT SELECT ON pglogical.sequence_state TO migration_admin;
+GRANT SELECT ON pglogical.subscription TO migration_admin;
+```
+In **psql**, grant permissions to the `public` schema and tables for the `orders` database:
+```
+GRANT USAGE ON SCHEMA public TO migration_admin;
+GRANT ALL ON SCHEMA public TO migration_admin;
+GRANT SELECT ON public.distribution_centers TO migration_admin;
+GRANT SELECT ON public.inventory_items TO migration_admin;
+GRANT SELECT ON public.order_items TO migration_admin;
+GRANT SELECT ON public.products TO migration_admin;
+GRANT SELECT ON public.users TO migration_admin;
+```
+
+5. The Database Migration Service requires all tables to be migrated to have a primary key. Once you have granted the user the required privileges, run the following to add a primary key to the inventory_items table and exit psql.
+```
+ALTER TABLE public.inventory_items ADD PRIMARY KEY(id);
+\q 
+exit
+```
+> Note: The detailed prerequisites for migrating a stand-alone PostgreSQL database to Cloud SQL for PostgreSQL are provided in the suggestion links in the Cloud Console GUI for Database Migration Services. Should you need some help on the detailed steps you must take, you may refer to that documentation, or you can look at the detailed steps in the migration lab that is part of this quest.
+
+:red_circle: :red_circle: **Solution to sub-task 5** :red_circle: :red_circle:  
+- Run command provided in instructions above.
+- `\q` is to quit **psql**
+- `exit` is to exit postgres user session
+
+#### Migrate the stand-alone PostgreSQL database to a Cloud SQL for PostgreSQL instance
+
+In this sub-task you must perform the migration using Database Migration Services.
+
+To complete this sub-task you must complete the following steps:
+
+1. Create a new Database Migration Service connection profile for the stand-alone PostgreSQL database, using the credentials of the `Postgres Migration User` migration user you created earlier.
+    - **Username** : `Postgres Migration User`
+    - **Password** : `DMS_1s_cool!`  
+
+You must configure the connection profile using the internal ip-address of the source compute instance.
+
+:red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:  
+A connection profile is a configuration object that stores info about the source database instance (the PostgreSQL running on `antern-postgressql-vm`) and is used by Database Migration Service to migrate data.  
+
+First, obtain the internal IP of the `antern-postgresql-vm` VM hosting the source database instance:  
+  - In Google Cloud Console, **Navigation menu** > **Compute ENgine** > **VM instances**.   
+  - Copy the **internal IP** value for `antern-postgresql-vm`.  
+
+Second, create the connection profile:
+  - In the Google Cloud Console, **Navigation menu** > **Database Migration** > **Connection profiles**.
+  - Click **+ Create Profile**.
+  - For **Database engine**, select **PostgreSQL**.
+  - For **Connection profile name**, enter **postgres-vm**.
+  - For **Hostname or IP address**, enter the internal IP for the PostgreSQL source instance that you copied in the previous task (e.g., 10.128.0.2)
+  - For **Port**, enter **5432**.
+  - For **Username**, enter **migration_admin**.
+  - For **Password**, enter **DMS_1s_cool!**.
+  - For **Region** select [region].
+  - For all other values leave the defaults.
+  - Click **Create**.
+A new connection profile named **postgres-vm** will appear in the Connections profile list.
+
+2. Create a new continuous Database Migration Service job.
+As part of the migration job configuration, make sure that you specify the following properties for the destination Cloud SQL instance:
+
+  - The **Destination Instance ID** must be set to `Migrated Cloud SQL for PostgreSQL Instance ID`
+  - The **Password** for the migrated instance must be set to `supersecret!`
+  - **Database version** must be set to **Cloud SQL for PostgreSQL 13**
+  - **Region** must be set to [filled in at lab start]
+  - For **Connections** both **Public IP** and **Private IP** must be set
+  - Select a standard machine type with **1 vCPU**
+  - For **Storage** type, use **SSD**
+  - Set the storage capacity to **10 GB**
+  - For the **Connectivity Method**, you must use **VPC peering** with the **default** VPC network.
+
+:red_circle: :red_circle: **Solution to sub-task 2** :red_circle: :red_circle:  
+5 steps -  
+    i. create a new continuous migration job  
+    ii. define the source database instance  
+    iii. create a new destination database instance  
+    iv. define connectivity method  
+    v. edit source instance `pg_hba.conf` file to allow Database Migration Service to access from VPC IP address  
+
+(i) Create a new continuous migration job
+  - In the Google Cloud Console, **Navigation menu** > **Database Migration** > **Migration jobs**.
+  - Click **+ Create Migration Job**.
+  - **For Migration job name**, enter **vm-to-cloudsql**.
+  - For **Source database engine**, select **PostgreSQL**.
+  - For **Destination region**, select [region].
+  - For **Destination database engine**, select **Cloud SQL for PostgreSQL**.
+  - For **Migration job type**, select **Continuous**.
+  - Leave the defaults for the other settings.
+  - Click **Save & Continue**.
+
+(ii) Define the source database instance
+  - For **Source connection profile**, select **postgres-vm**.
+  - Leave the defaults for the other settings.
+  - Click **Save & Continue**.
+
+(iii) Create a new destination database instance
+  - For **Destination Instance ID**, enter `Migrated Cloud SQL for PostgreSQL Instance ID`.
+  - For **Root password**, enter **supersecret!**.
+  - For **Database version**, select **Cloud SQL for PostgreSQL 13**.
+  - In **Choose region and zone** section, select **Single zone** and select [zone] as primary zone.
+  - For **Instance connectivity**, select **Private IP** and **Public IP**.
+  - Leave **Associated networking VPC to peer** as **default**
+  - Select **Use an automatically allocated IP range**.
+  - Leave the defaults for the other settings.
+  - Click **Allocate & Connect**.
+  - For **Machine type**, check **1 vCPU, 3.75 GB**
+  - For **Storage type**, select **SSD**
+  - For **Storage capacity**, select **10 GB**
+  - Click **Create & Continue**.
+  - If prompted to confirm, click **Create Destination & Continue**.
+
+(iv) Define connectivity method
+  - For **Connectivity method**, select **VPC peering**.
+  - For **VPC**, select **default**.
+  - When you see an updated message that "Instance was created. Define the connectivity method, then Configure & Continue.", click **Configure & Continue**.
+
+(v) Edit source `pg_hba.conf` PostgreSQL configuration file to allow Database Migration Service to access from VPC IP address.
+  - In the Google Cloud Console, **Navigation menu** > **VPC network** > **VPC network peering** and right-click to open in a new tab.
+  - Click on the `servicenetworking-googleapis-com` entry.
+  - In the **Imported routes** tab, select and copy the `Destination IP range` (e.g. 10.107.176.0/24).
+  - In a SSH terminal for the `antern-postgresql-vm` instance, edit the `pg_hba.conf` file:
+  ```
+  sudo nano /etc/postgresql/13/main/pg_hba.conf
+  ```
+  - on the last line of the file, replace the IP range in "host all all 0.0.0.0/0 md5" with the IP range copied from the `Destination IP range`. You should get "host all all `Destination IP range` md5".
+  - Save and exit the nano editor with **Ctrl-O, Enter, Ctrl-X**
+  - Restart the PostgreSQL service for the config changes to take effect. In the VM instance SSH Terminal session:
+  ```
+  sudo systemctl start postgresql@13-main
+  ```
+
+3. Test and then start the continuous migration job.
+> **Note**: If you do not correctly prepare the source PostgreSQL environment, the migration might fail completely, or it might fail to migrate some individual tables. If some tables are missing, even though the migration appears to be working otherwise, check that you have correctly configured all of the source database tables.
+
+:red_circle: :red_circle: **Solution to sub-task 3** :red_circle: :red_circle:  
+
+  - In the **Database Migration Service** tab you open earlier, review the details of the migration job.
+  - Click **Test Job**.
+  - If you get a tick mark and "Your migration job test was successful", click **Create & Start Job**.
+  - If prompted to confirm, click **Create & Start**.
+  - to review the status of the continuous migration job,
+      - In the Google Cloud Console, **Navigation menu** > **Database Migration** > **Migration jobs**.
+  - Click the migration job **vm-to-cloudsql** to see the details page.
+  - Review the migration job status.
+    - If you have not started the job yet, the status will show as **Not started**.
+    - If the job has just started, status will show as **Starting**, and then transition to **Running Full dump in progress** to indicate that the initial database dump is in progress.
+    - After the initial database dump has been completed, status will transition to **Running CDC in progress** to indicate that the continuous migration is in progress.
+    - A **Completed** status is shown only after the destination database has been promoted to a stand-alone database for reading and writing data. Migration job is completed.
+
+#### Promote a Cloud SQL to be a stand-alone instance for reading and writing data
+In this task, you must complete the migration by promoting the Cloud SQL for PostgreSQL instance to a stand-alone instance.
+
+:red_circle: :red_circle: **Solution to sub-task** :red_circle: :red_circle:  
+
+- Google Cloud Console > **Navigation menu** > **Database Migration** > **Migration jobs**.
+- Click the migration job name **vm-to-cloudsql** to see the details page.
+- Click **Promote**.
+- If prompted to confirm, click **Promote**.
+- to verify, Google Cloud Console > **Navigation menu** > **Databases** > **SQL**. Notice that `Migrated Cloud SQL for PostgreSQL Instance ID` is a PostgreSQL external primary instance.
+
+<hr>
+
+### Task 2: Update permissions and add IAM roles to users
+
+Now that the database has been migrated to a Cloud SQL for PostgreSQL instance, you will need to update user roles via IAM for different members on the Antern and Cymbal teams. Specifically, you want to grant the **Antern Editor** user access to the Cloud SQL database, the **Cymbal Owner** admin access to have full control of Cloud SQL resources, and the **Cymbal Editor** to have editor permissions on the project.
+
+**Note**: For this task, you will need to log in to the **Antern Project** with the **Antern Owner** credentials.
+
+1. Grant the **Antern Editor** user the **Cloud SQL Instance User** role for the CloudSQL database. Their username is: `Antern Editor username`.  
+  - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Antern Editor** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
+2. Grant the **Cymbal Owner** user the **Cloud SQL Admin** role for the CloudSQL database. Their username is: `Cymbal Owner username`.
+  - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Cymbal Owner** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
+3. Change the **Cymbal Editor** user role from **Viewer** to **Editor**. Their username is `Cymbal Editor username`.
+
+:red_circle: :red_circle: **Solution to Task 2** :red_circle: :red_circle:  
+
+<hr>
+
+### Task 3: Create networks and firewalls
+
+As part of the acquisition strategy, a VPC network to connect resources internally needs to be recreated in the Cymbal project. Specifically, you will need to create a VPC network with two subnets and firewalls to open connections between resources. Additionally, on this network your team will need to be able to connect to Linux and Windows machines using SSH and RDP, as well as diagnose network communication issues via ICMP.
+
+In this task, you will create a VPC network and firewall rules that satisfy these requirements.
+
+> **Note**: For this task, you will need to log in to the **Cymbal Project** with the **Cymbal Owner** credentials.
+
+#### Create a VPC network with two subnetworks
+
+Create a VPC network named [network name] with two subnets: [subnet a name] and [subnet b name]. Use a **Regional** dynamic routing mode.
+
+For [subnet a name] set the region to [network region 1].
+
+  - Set the **IP stack type** to **IPv4 (single-stack)**
+  - Set IPv4 range to `10.10.10.0/24`
+
+For [subnet b name] set the region to [network region 2].
+
+  - Set the **IP stack type** to **IPv4 (single-stack)**
+  - Set IPv4 range to `10.10.20.0/24`
+
+  #### Create firewall rules for the VPC network
+
+1. Create a firewall rule named [firewall rule 1].
+
+  - For the network, use [network name].
+  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+  - Set the Protocol to **TCP** and port to **22**
+
+2. Create a firewall rule named [firewall rule 2].
+
+  - For the network, use [network name].
+  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+  - Set the Protocol to **TCP** and port to **3389**
+
+Create a firewall rule named [firewall rule 3].
+
+  - For the network, use [network name].
+  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+  - Set the Protocol to **icmp**
