@@ -348,25 +348,162 @@ For [subnet b name] set the region to [network region 2].
   - Set the **IP stack type** to **IPv4 (single-stack)**
   - Set IPv4 range to `10.10.20.0/24`
 
+:red_circle: :red_circle: **Solution to Create a VPC network with two subnetworks** :red_circle: :red_circle:  
+
+1. Create a custom network
+```
+gcloud compute networks create [network name] \
+  --subnet-mode custom
+```
+  --bgp-routing-mode controls the behavior of Cloud Router. Choice of regional (default) or global.
+
+2. Create [subnet a name]
+```
+gcloud compute networks subnets create [subnet a name] \
+   --network [network name] \
+   --region [network region 1] \
+   --range 10.10.10.0/24
+```
+  - IPv4 single-stack type is default
+
+3. Create [subnet b name]
+```
+gcloud compute networks subnetworks create [subnet b name] \
+  --network [network name] \
+  --region [network region 2] \
+  --range 10.10.20.0/24
+  ```
+4. To verify, list your sub-networks:
+```
+gcloud compute networks subnets list \
+--network [network name]
+```  
+
   #### Create firewall rules for the VPC network
 
 1. Create a firewall rule named [firewall rule 1].
 
-  - For the network, use [network name].
-  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
-  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
-  - Set the Protocol to **TCP** and port to **22**
+    - For the network, use [network name].
+    - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+    - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+    - Set the Protocol to **TCP** and port to **22**
 
 2. Create a firewall rule named [firewall rule 2].
 
-  - For the network, use [network name].
-  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
-  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
-  - Set the Protocol to **TCP** and port to **3389**
+    - For the network, use [network name].
+    - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+    - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+    - Set the Protocol to **TCP** and port to **3389**
 
-Create a firewall rule named [firewall rule 3].
+3. Create a firewall rule named [firewall rule 3].
 
-  - For the network, use [network name].
-  - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
-  - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
-  - Set the Protocol to **icmp**
+    - For the network, use [network name].
+    - Set the priority to **65535**, the traffic to **Ingress** and action to **Allow**
+    - The targets should be set to **all instances in the network** and the IP ranges should include **all IPv4 ranges**
+    - Set the Protocol to **icmp**
+
+:red_circle: :red_circle: **Solution for Create firewall rules for the VPC network** :red_circle: :red_circle:  
+
+```
+gcloud compute firewall-rules create [firewall rule 1] \
+  --network [network name] \
+  --priority 65535 \
+  --allow tcp:22
+
+gcloud compute firewall-rules create [firewall rule 2] \
+  --network [network name] \
+  --priority 65535 \
+  --allow tcp:3389
+
+gcloud compute firewall-rules create [firewall rule 3] \
+  --network [network name] \
+  --priority 65535 \
+  --allow icmp
+```
+To verify,
+```
+gcloud compute firewall-rules list \
+  --filter network=[network name]
+```
+
+Note:
+- [VPC firewall rules](https://cloud.google.com/firewall/docs/using-firewalls#:~:text=Permissions%20required%20for%20this%20task%201%20In%20the,on%20match%2C%20choose%20allow%20or%20deny.%20More%20items)
+- `--direction ingress` is default
+- by ommiting `--target-tags` and `--target-service-accounts`, firewall rule should apply to all targets (instances) in network.
+- by ommiting `--destination-ranges`, firewall rule apply to entire IPv4 range.
+
+<hr>
+
+### Task 4: Troubleshoot and fix a broken GKE cluster
+
+> **Note**: For this task, you will need to log in to the **Cymbal Project** with the **Cymbal Owner** credentials.
+
+After deploying the e-commerce website GKE cluster, your team has notified you that there are a few known issues with the GKE cluster that need to be addressed. They have found three bugs that need to be fixed:
+
+  - **Bug #1**: Too much latency of the frontend service
+  - **Bug #2**: Ratings are become stale
+  - **Bug #3**: Crashing bug in the recommendation service
+
+As part of the acquisition strategy, you have been assigned to fix `bug number`. Other engineers working on your team have provided some additional information for each of the issues they have found, which you can use to troubleshoot the issue.
+
+**Hints:**
+
+**Bug #1**: Visit the external IP of the demo application to see if there are any visible changes. You can also use monitoring dashboards to see metrics associated with each service.
+
+**Bug #2**: Product ratings are managed by the "rating service", hosted on Google AppEngine. The rating data is kept up-to-date by periodically calling an API endpoint that collects all recently sent new rating scores for each product and calculates the new rating. Try to check if the rating service operates normally by inspecting the logs from the AppEngine service. Another team member mentioned this might have to do with an issue in the main.py file.
+
+**Bug #3**: Browse your website until you encounter an issue, and use Cloud Logging to view logs exported by each service. Another team member mentioned this crashing bug might be due to an integer conversion stage in the service.
+
+#### Create a BigQuery log sink
+
+Before fixing the underlying issue, you have been requested to create a log sink to send out the errors associated with the broken service. You will then need use IAM to give users from Antern different levels of access to BigQuery so they can view and interact with the dataset.
+
+1. Use the **Logs Explorer** to investigate your running GKE app and investigate the service has errors. Hint: you should be looking for logs with severity `ERROR`.
+
+:red_circle: :red_circle: **Solution for sub-task 1** :red_circle: :red_circle:  
+
+  - In the Cloud Console, select **navigation menu** > **Logging** > **Logs Explorer**.
+  - In **Resource**, select **BigQuery**, then click **Apply**.
+  - Now, click **Run query** button in the top right.
+  - Look for the entry that contains the word "severity: ERROR"
+  - Click on the arrow on the left to expand the entry.
+  - **Expand nested fields** to show the full JSON log entry, scroll down and have a look at the different fields.
+
+
+2. Once you have identified the service error logs, create a sink to send the logs out to BigQuery.
+
+    - Name the sink `sink name`
+    - For the destination, create a BigQuery dataset named `gke_app_errors_sink` with a location of **us (multiple regions in United States)**.
+    - In your `inclusion filter`, make sure to include: `resource.type`, `inclusion filter`, and `severity`.
+  
+  :red_circle: :red_circle: **Solution for sub-task 2** :red_circle: :red_circle:  
+
+  - Click **Create sink** from the **More actions** drop-down.
+  - Fill in the fields as follows:
+    - Sink name: `sink name` and click **NEXT**.
+    - Select sink service: **BigQuery dataset**
+    - Select Bigquery dataset (Destination): create new dataset named `gke_app_errors_sink`
+    - in the **location** ....
+    - in the **inclusion filter**, type ....
+    - Leave the rest of the options at the default settings.
+    - Click **CREATE SINK**.
+      
+
+3. Grant the **Antern Editor** user the **BigQuery Data Viewer** role for this project. Their username is: `Antern Editor username`.
+
+4. Grant the **Antern Owner** user the **BigQuery Admin** role for this project. Their username is: `Antern Owner username`.
+
+#### Fix the GKE cluster
+
+Now that you have created a log sink in BigQuery for the errors in the service, some engineers on your team took a look and figured out the correct steps to fix the issue. In this task you will download the solution code and run it to fix the service in your GKE cluster.
+
+1. Connect to the **cloud-ops-sandbox** GKE cluster and run the following commands to remediate the issue. Answer the verification questions when prompted.
+```
+git clone --depth 1 --branch csb_1220 https://github.com/GoogleCloudPlatform/cloud-ops-sandbox.git
+cd cloud-ops-sandbox/sre-recipes
+./sandboxctl sre-recipes restore recipe number
+./sandboxctl sre-recipes verify recipe number
+```
+
+2. Verify the e-commerce shop is properly working.
+
