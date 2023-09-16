@@ -31,8 +31,8 @@ To complete this sub-task you must complete the following steps:
 Database Migration Services require the [Database Migration API](https://cloud.google.com/database-migration/docs/reference/rest) and the [Service Networking API](https://cloud.google.com/service-infrastructure/docs/service-networking/reference/rest) to be enabled in order to function. You must enable these APIs for your project.
 
 :red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:   
-  - Log in using the Antern Owner Username.  
-  - In the Search Bar at the top of the Google Cloud Console, search for **Database Migration API**. Select the **Database Migration API** option under Marketplace. Click on > **ENABLE**  
+  - Log in as **Antern Owner**.  
+  - In the Search Bar at the top of the Google Cloud Console, search for **Database Migration API**. Select the **Database Migration API** option under Marketplace. Click on **ENABLE**.  
   - Repeat search for **Service Networking API** and enable it.
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:   
@@ -90,21 +90,23 @@ Explanation:
 3. Create a dedicated user for database migration on the stand-alone database.
 The new user that you create on the stand-alone PostgreSQL installation on the `antern-postgresql-vm` virtual machine must be configured using the following user name and password:
 
-    - **Migration user name** : `Postgres Migration Username, e.g. migration_admin`
+    - **Migration user name** : `Postgres_Migration_Username, e.g. migration_admin`
 
     - **Migration user password** : `DMS_1s_cool!`
 
 :red_circle: :red_circle: **Solution to sub-task 3** :red_circle: :red_circle:  
+
 In the SSH terminal for `antern-postgresql-vm`, launch the **psql** command-line tool:
 ```
 sudo su - postgres
 psql
 ```
 In **psql**, create a new user with the replication role:
+
 ```
-CREATE USER [Postgre Migration Username] PASSWORD 'DMS_1s_cool!';   //change [Postgre Migration Username] to that assigned by lab
-ALTER DATABASE orders OWNER TO [Postgre Migration Username];
-ALTER ROLE [Postgre Migration Username] WITH REPLICATION;
+CREATE USER [Postgre_Migration_Username] PASSWORD 'DMS_1s_cool!';   //change [Postgre_Migration_Username] to that assigned during lab
+ALTER DATABASE orders OWNER TO [Postgre_Migration_Username];
+ALTER ROLE [Postgre_Migration_Username] WITH REPLICATION;
 ```
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
@@ -125,43 +127,44 @@ List the PostgreSQL databases on the `antern-postgresql-vm` VM using `\l` to con
 In **psql**, grant permissions to the `pglogical` schema and tables for the `orders` database:
 ```
 \c orders;
-GRANT USAGE ON SCHEMA pglogical TO migration_admin;
-GRANT ALL ON SCHEMA pglogical TO migration_admin;
-GRANT SELECT ON pglogical.tables TO migration_admin;
-GRANT SELECT ON pglogical.depend TO migration_admin;
-GRANT SELECT ON pglogical.local_node TO migration_admin;
-GRANT SELECT ON pglogical.local_sync_status TO migration_admin;
-GRANT SELECT ON pglogical.node TO migration_admin;
-GRANT SELECT ON pglogical.node_interface TO migration_admin;
-GRANT SELECT ON pglogical.queue TO migration_admin;
-GRANT SELECT ON pglogical.replication_set TO migration_admin;
-GRANT SELECT ON pglogical.replication_set_seq TO migration_admin;
-GRANT SELECT ON pglogical.replication_set_table TO migration_admin;
-GRANT SELECT ON pglogical.sequence_state TO migration_admin;
-GRANT SELECT ON pglogical.subscription TO migration_admin;
+GRANT USAGE ON SCHEMA pglogical TO [Postgre_Migration_Username];
+GRANT ALL ON SCHEMA pglogical TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.tables TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.depend TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.local_node TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.local_sync_status TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.node TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.node_interface TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.queue TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set_seq TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set_table TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.sequence_state TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.subscription TO [Postgre_Migration_Username];
 ```
-In **psql**, grant permissions to the `pglogical` schema and tables for the `postgres` database:
+In **psql**, grant permissions to the `pglogical` schema and tables for the `postgres` database.   
+  - you only need to change "\c orders;" to "\c postgres;" in the above command block and re-use it.
 ```
 \c postgres;
-GRANT USAGE ON SCHEMA pglogical TO migration_admin;
-GRANT ALL ON SCHEMA pglogical TO migration_admin;
-GRANT SELECT ON pglogical.tables TO migration_admin;
-GRANT SELECT ON pglogical.depend TO migration_admin;
-GRANT SELECT ON pglogical.local_node TO migration_admin;
-GRANT SELECT ON pglogical.local_sync_status TO migration_admin;
-GRANT SELECT ON pglogical.node TO migration_admin;
-GRANT SELECT ON pglogical.node_interface TO migration_admin;
-GRANT SELECT ON pglogical.queue TO migration_admin;
-GRANT SELECT ON pglogical.replication_set TO migration_admin;
-GRANT SELECT ON pglogical.replication_set_seq TO migration_admin;
-GRANT SELECT ON pglogical.replication_set_table TO migration_admin;
-GRANT SELECT ON pglogical.sequence_state TO migration_admin;
-GRANT SELECT ON pglogical.subscription TO migration_admin;
+GRANT USAGE ON SCHEMA pglogical TO [Postgre_Migration_Username];
+GRANT ALL ON SCHEMA pglogical TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.tables TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.depend TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.local_node TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.local_sync_status TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.node TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.node_interface TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.queue TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set_seq TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.replication_set_table TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.sequence_state TO [Postgre_Migration_Username];
+GRANT SELECT ON pglogical.subscription TO [Postgre_Migration_Username];
 ```
 In **psql**, grant permissions to the `public` schema and tables for the `orders` database:
 ```
-GRANT USAGE ON SCHEMA public TO migration_admin;
-GRANT ALL ON SCHEMA public TO migration_admin;
+GRANT USAGE ON SCHEMA public TO [Postgre_Migration_Username];
+GRANT ALL ON SCHEMA public TO [Postgre_Migration_Username];
 ```
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
@@ -176,16 +179,16 @@ exit
 
 :red_circle: :red_circle: **Solution to sub-task 5** :red_circle: :red_circle:   
 
-Make the [Postgre Migration Username, i.e. migration_admin] user the owner of the tables in the `orders` database, so that you can edit the source data:  
+Make the [Postgre_Migration_Username, e.g. migration_admin] user the owner of the tables in the `orders` database, so that you can edit the source data:  
 
 ```
 \c orders;
 \dt
-ALTER TABLE public.distribution_centers OWNER TO migration_admin;
-ALTER TABLE public.inventory_items OWNER TO migration_admin;
-ALTER TABLE public.order_items OWNER TO migration_admin;
-ALTER TABLE public.products OWNER TO migration_admin;
-ALTER TABLE public.users OWNER TO migration_admin;
+ALTER TABLE public.distribution_centers OWNER TO [Postgre_Migration_Username];
+ALTER TABLE public.inventory_items OWNER TO [Postgre_Migration_Username];
+ALTER TABLE public.order_items OWNER TO [Postgre_Migration_Username];
+ALTER TABLE public.products OWNER TO [Postgre_Migration_Username];
+ALTER TABLE public.users OWNER TO [Postgre_Migration_Username];
 \dt
 ```
 
@@ -208,7 +211,7 @@ In this sub-task you must perform the migration using Database Migration Service
 To complete this sub-task you must complete the following steps:
 
 1. Create a new Database Migration Service connection profile for the stand-alone PostgreSQL database, using the credentials of the `Postgres Migration User` migration user you created earlier.
-    - **Username** : `Postgres Migration User`
+    - **Username** : `Postgres_Migration_Username`
     - **Password** : `DMS_1s_cool!`  
 
 You must configure the connection profile using the internal ip-address of the source compute instance.
@@ -226,8 +229,8 @@ Second, create the connection profile:
   - For **Database engine**, select **PostgreSQL**.
   - For **Connection profile name**, enter **postgres-vm**.
   - For **Hostname or IP address**, enter the internal IP for the PostgreSQL source instance that you copied in the previous task (e.g., 10.138.0.2)
-  - For **Port**, enter **5432**.
-  - For **Username**, enter **migration_admin**.
+  - For **Port**, leave as **5432**.
+  - For **Username**, enter **Postgres_Migration_Username**.
   - For **Password**, enter **DMS_1s_cool!**.
   - For **Region** select [region - during lab, copy from Task 2 below].
   - For all other values leave the defaults.
@@ -284,7 +287,7 @@ As part of the migration job configuration, make sure that you specify the follo
   - Leave **Use an automatically allocated IP range** selected.
   - Click **Allocate & Connect**.
 
-  - For **Machine type**, check **1 vCPU, 3.75 GB**
+  - For **Machine shapes**, check **1 vCPU, 3.75 GB**
   - For **Storage type**, leave **SSD** selected
   - For **Storage capacity**, select **10 GB**
   - Click **Create & Continue**.
@@ -362,12 +365,12 @@ Now that the database has been migrated to a Cloud SQL for PostgreSQL instance, 
 :red_circle: :red_circle: **Solution to Task 2** :red_circle: :red_circle:  
 
   - **Navigation menu** > **SQL** > click on the `Destination Instance ID, e.g. corp-postgres29`  click on **Users** on the menu on the left. 
-    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-00-2ff78e7fdff7@qwiklabs.net, assigned to **Antern Editor** during lab.
-    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-02-9b295853bcee@qwiklabs.net, assigned to **Cymbal Owner** during lab.
+    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-00-2ff78e7fdff7@qwiklabs.net, assigned to **Antern Editor** during lab. Click **ADD**.
+    - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-02-9b295853bcee@qwiklabs.net, assigned to **Cymbal Owner** during lab. Click **ADD**.
   
   - **Navigation menu** > **IAM & Admin** > **IAM**. 
     - Look for the Principal that match the username of **Cymbal Editor**. The role should be displayed as **Viewer**. Click on the pencil icon to edit the role. Change the role to **Editor**. Click **Save**.
-    - Look for the Principal that match the username of **Cymbal Owner**. The role should be displayed as **Cloud SQL Instance User**. Click on the pencil icon to edit the role. Type **Cloud SQL Admin** in the filter and select it. Click **Save**.
+    - Look for the Principal that match the username of **Cymbal Owner**. There are 2 roles - **Viewer** and **Cloud SQL Instance User**. Click on the pencil icon to edit. Click on **Cloud SQL Instance User**, type **Cloud SQL Admin** in the filter and select it. Click **Save**.
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
@@ -416,7 +419,7 @@ gcloud compute networks subnets create [subnet a name] \
 
 3. Create [subnet b name]
 ```
-gcloud compute networks subnetworks create [subnet b name] \
+gcloud compute networks subnets create [subnet b name] \
   --network [network name] \
   --region [network region 2] \
   --range 10.10.20.0/24
@@ -515,11 +518,9 @@ Before fixing the underlying issue, you have been requested to create a log sink
 :red_circle: :red_circle: **Solution for sub-task 1** :red_circle: :red_circle:  
 
   - In the Cloud Console, select **navigation menu** > **Logging** > **Logs Explorer**.
-  - In **Resource**, select **BigQuery**, then click **Apply**.
-  - Now, click **Run query** button in the top right.
-  - Look for the entry that contains the word "severity: ERROR"
-  - Click on the arrow on the left to expand the entry.
-  - **Expand nested fields** to show the full JSON log entry, scroll down and have a look at the different fields.
+  - In the filter box to "Search fields and values" under **Log fields** on the left of the screen, type **error** and select on the "Error" option displayed.
+  - Look at the list of log entries under "Query results".
+  - To expand a log entry, click on the **>** arrow on the left.
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
@@ -527,7 +528,7 @@ Before fixing the underlying issue, you have been requested to create a log sink
 
     - Name the sink `sink name`
     - For the destination, create a BigQuery dataset named `gke_app_errors_sink` with a location of **us (multiple regions in United States)**.
-    - In your `inclusion filter`, make sure to include: `resource.type`, `inclusion filter`, and `severity`.
+    - Click on **EDIT** in the headings for **Query results**. In the `Custom summary fields`, include: `resource.type`, `resource.labels.module_id`, and `protoPayload.line.severity`.
   
   :red_circle: :red_circle: **Solution for sub-task 2** :red_circle: :red_circle:  
 
@@ -535,17 +536,38 @@ Before fixing the underlying issue, you have been requested to create a log sink
   - Fill in the fields as follows:
     - Sink name: `sink name` and click **NEXT**.
     - Select sink service: **BigQuery dataset**
-    - Select Bigquery dataset (Destination): create new dataset named `gke_app_errors_sink`
-    - in the **location** ....
-    - in the **inclusion filter**, type ....
+    - For **Select Bigquery dataset**, select **Create new BigQuery dataset**
+    - In the "Create dataset" slide-out, enter `gke_app_errors_sink` for **Dataset ID**.
+    - Leave **Location type** as **Multi-region**, **US (multiple regions in United States)**.
+    - Click **CREATE DATASET**.
+    - Click **NEXT**.
+    - in the **Choose logs to include in sink**, type "severity=ERROR" in the filter box.
+    - Click **NEXT**.
     - Leave the rest of the options at the default settings.
     - Click **CREATE SINK**.
-      
+
+Reference: 
+  - [Logging query language](https://cloud.google.com/logging/docs/view/logging-query-language)
+  - [Configure log sinks - route logs to supported destinations](https://cloud.google.com/logging/docs/export/configure_export_v2)
+
+
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 3. Grant the **Antern Editor** user the **BigQuery Data Viewer** role for this project. Their username is: `Antern Editor username`.
 
 4. Grant the **Antern Owner** user the **BigQuery Admin** role for this project. Their username is: `Antern Owner username`.
+
+:red_circle: :red_circle: **Solution for sub-tasks 3 & 4** :red_circle: :red_circle:  
+
+```
+gcloud projects add-iam-policy-binding [PROJECT_ID] --member="user:EMAIL_ADDRESS of Antern Editor" --role=roles/bigquery.dataViewer
+gcloud projects add-iam-policy-binding [PROJECT_ID] --member="user:EMAIL_ADDRESS of Antern Owner" --role=roles/bigquery.admin
+```
+  - copy the PROJECT_ID from the drop-down list at the top of the Cloud Console.
+
+Reference: [BigQuery IAM](https://cloud.google.com/bigquery/docs/access-control#bigquery)
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 #### Fix the GKE cluster
 
@@ -561,3 +583,21 @@ cd cloud-ops-sandbox/sre-recipes
 
 2. Verify the e-commerce shop is properly working.
 
+:red_circle: :red_circle: **Solution to Fix the GKE cluster** :red_circle: :red_circle:  
+
+  - check that you are in the windows tab for **Cymbal Project** as **Cymbal Owner**.
+  - run the remediation commands:
+```
+git clone --depth 1 --branch csb_1220 https://github.com/GoogleCloudPlatform/cloud-ops-sandbox.git
+cd cloud-ops-sandbox/sre-recipes
+./sandboxctl sre-recipes restore recipe number
+./sandboxctl sre-recipes verify recipe number
+```
+  - answers to quiz:  
+    - Which service has an issue? Rating    
+    - What was the cause of the issue? Scheduler job that sends recollect request to rating service does not work.  
+  - to verify that the e-commerce shop is working properly:  
+    - **Navigation menu** > Kubernetes Engines > Services and Ingress > Status should show tick mark for all services.  
+    - Click on the IP Endpoint for **frontend-external** (Type: External load balancer) to access front page of application. Check that it is working properly.  
+  
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
