@@ -30,10 +30,13 @@ To complete this sub-task you must complete the following steps:
 
 Database Migration Services require the [Database Migration API](https://cloud.google.com/database-migration/docs/reference/rest) and the [Service Networking API](https://cloud.google.com/service-infrastructure/docs/service-networking/reference/rest) to be enabled in order to function. You must enable these APIs for your project.
 
-:red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:    
-Log in using the Antern Owner Username.  
-In the Search Bar at the top of the Google Cloud Console, search for **Database Migration API**. Select the **Database Migration API** option under Marketplace. Click on **ENABLE**  
-Repeat search for **Service Networking API** and enable it.  
+:red_circle: :red_circle: **Solution to sub-task 1** :red_circle: :red_circle:   
+  - Log in using the Antern Owner Username.  
+  - In the Search Bar at the top of the Google Cloud Console, search for **Database Migration API**. Select the **Database Migration API** option under Marketplace. Click on > **ENABLE**  
+  - Repeat search for **Service Networking API** and enable it.
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:   
+
 
 
 2. Upgrade the target databases on the `antern-postgresql-vm` virtual machine with the `pglogical` database extension.  
@@ -41,18 +44,20 @@ Repeat search for **Service Networking API** and enable it.
 You must install and configure the **pglogical** database extension on the stand-alone PostgreSQL database on the `antern-postgresql-vm` Compute Instance VM. The pglogical database extension package that you must install is named `postgresql-13-pglogical`.  
 
 :red_circle: :red_circle: **Solution to sub-task 2a** :red_circle: :red_circle:    
-SSH into the `antern-postgresql-vm`  
+  - SSH into the `antern-postgresql-vm`  
 
-1. In the Google Cloud Console, on the **Navigation menu**, click **Compute Engine > VM instances**.
+  - In the Google Cloud Console, on the **Navigation menu**, click **Compute Engine > VM instances**.
 
-2. For the `antern-postgresql-vm` VM instance, select **SSH**.
+  - For the `antern-postgresql-vm` VM instance, select **SSH**.
 
-3. If prompted, click **Authorize**.
+  - If prompted, click **Authorize**.
 
-4. In the SSH terminal, install the pglogical database extension:
+  - In the SSH terminal, install the pglogical database extension:
 ```
 sudo apt install postgresql-13-pglogical
 ```
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 To complete the configuration of the **pglogical** database extension you must edit the PostgreSQL configuration file `/etc/postgresql/13/main/postgresql.conf` to enable the **pglogical** database extension and you must edit the `/etc/postgresql/13/main/pg_hba.conf` to allow access from all hosts.  
 
@@ -66,7 +71,7 @@ sudo su - postgres -c "cat pg_hba_append.conf >> /etc/postgresql/13/main/pg_hba.
 sudo su - postgres -c "cat postgresql_append.conf >> /etc/postgresql/13/main/postgresql.conf"
 sudo systemctl restart postgresql@13-main
 ```
-Note: 
+Explanation: 
 - Above commands are from [Migrate to Cloud SQL for PostgreSQL using Database Migration Service](https://www.cloudskillsboost.google/focuses/22792?parent=catalog) quest.
 - `sudo` is acronym for superuser do. Allows you to issue a single command as the root user or another user without a need to change login identity.
 - `su` is acronym for switch user or substitute user.
@@ -80,6 +85,7 @@ Note:
 - whenever you make changes to the config files on a Linux system, you need to restart the services (in this case, postgresql) so that they re-read the config files and apply the changes.
 - [pglogical](https://github.com/2ndQuadrant/pglogical) is a PostgreSQL extension that provides logical streaming replication, using a pub/sub model.
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 3. Create a dedicated user for database migration on the stand-alone database.
 The new user that you create on the stand-alone PostgreSQL installation on the `antern-postgresql-vm` virtual machine must be configured using the following user name and password:
@@ -101,6 +107,7 @@ ALTER DATABASE orders OWNER TO [Postgre Migration Username];
 ALTER ROLE [Postgre Migration Username] WITH REPLICATION;
 ```
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 4. Grant that user the required privileges and permissions for databases to be migrated.
 Database Migration Services require that the migration user has privileges to specific schemata and relations of the target databases for migration, in this case that is the `orders` and `postgres` databases.
@@ -157,6 +164,8 @@ GRANT USAGE ON SCHEMA public TO migration_admin;
 GRANT ALL ON SCHEMA public TO migration_admin;
 ```
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
+
 5. The Database Migration Service requires all tables to be migrated to have a primary key. Once you have granted the user the required privileges, run the following to add a primary key to the `inventory_items` table and exit psql.
 ```
 ALTER TABLE public.inventory_items ADD PRIMARY KEY(id);
@@ -187,9 +196,10 @@ ALTER TABLE public.inventory_items ADD PRIMARY KEY(id);
 exit
 ```
 
-- Run command provided in instructions above.
 - `\q` is to quit **psql**
 - `exit` is to exit postgres user session
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 #### Migrate the stand-alone PostgreSQL database to a Cloud SQL for PostgreSQL instance
 
@@ -223,6 +233,8 @@ Second, create the connection profile:
   - For all other values leave the defaults.
   - Click **Create**.
 A new connection profile named **postgres-vm** will appear in the Connections profile list.
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 <br>
 
@@ -298,6 +310,7 @@ As part of the migration job configuration, make sure that you specify the follo
   ```
   sudo systemctl start postgresql@13-main
   ```
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 3. Test and then start the continuous migration job.
 > **Note**: If you do not correctly prepare the source PostgreSQL environment, the migration might fail completely, or it might fail to migrate some individual tables. If some tables are missing, even though the migration appears to be working otherwise, check that you have correctly configured all of the source database tables.
@@ -308,7 +321,7 @@ As part of the migration job configuration, make sure that you specify the follo
   - Click **Test Job**.
   - If you get a tick mark and "Your migration job test was successful", click **Create & Start Job**.
   - If prompted to confirm, click **Create & Start**.
-  - to verify and review the status of the continuous migration job,
+  - To verify and review the status of the continuous migration job,
       - In the Google Cloud Console, **Navigation menu** > **Database Migration** > **Migration jobs**.
   - Click the migration job **vm-to-cloudsql** to see the details page.
   - Review the migration job status.
@@ -316,6 +329,8 @@ As part of the migration job configuration, make sure that you specify the follo
     - If the job has just started, status will show as **Starting**, and then transition to **Running Full dump in progress** to indicate that the initial database dump is in progress.
     - After the initial database dump has been completed, status will transition to **Running CDC in progress** to indicate that the continuous migration is in progress.
     - A **Completed** status is shown only after the destination database has been promoted to a stand-alone database for reading and writing data. Migration job is completed.
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 #### Promote a Cloud SQL to be a stand-alone instance for reading and writing data
 In this task, you must complete the migration by promoting the Cloud SQL for PostgreSQL instance to a stand-alone instance.
@@ -328,6 +343,8 @@ In this task, you must complete the migration by promoting the Cloud SQL for Pos
 - If prompted to confirm, click **Promote**.
 - to verify, Google Cloud Console > **Navigation menu** > **Databases** > **SQL**. Notice that `Migrated Cloud SQL for PostgreSQL Instance ID` is a PostgreSQL external primary instance.
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
+
 <hr>
 
 ### Task 2: Update permissions and add IAM roles to users
@@ -337,14 +354,14 @@ Now that the database has been migrated to a Cloud SQL for PostgreSQL instance, 
 **Note**: For this task, you will need to log in to the **Antern Project** with the **Antern Owner** credentials.
 
 1. Grant the **Antern Editor** user the **Cloud SQL Instance User** role for the CloudSQL database. Their username is: `Antern Editor username`.  
-  - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Antern Editor** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
+    - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Antern Editor** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
 2. Grant the **Cymbal Owner** user the **Cloud SQL Admin** role for the CloudSQL database. Their username is: `Cymbal Owner username`.
-  - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Cymbal Owner** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
+    - Navigate to the Cloud SQL database you just created. In the **Users** section, add the **Cymbal Owner** user account to the database you created. Use **Cloud IAM authentication** and for the principal use their username above.
 3. Change the **Cymbal Editor** user role from **Viewer** to **Editor**. Their username is `Cymbal Editor username`.
 
 :red_circle: :red_circle: **Solution to Task 2** :red_circle: :red_circle:  
 
- - **Navigation menu** > **SQL** > click on the `Destination Instance ID, e.g. corp-postgres29`  click on **Users** on the menu on the left. 
+  - **Navigation menu** > **SQL** > click on the `Destination Instance ID, e.g. corp-postgres29`  click on **Users** on the menu on the left. 
     - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-00-2ff78e7fdff7@qwiklabs.net, assigned to **Antern Editor** during lab.
     - click on **ADD USER ACCOUNT** > select **Cloud IAM** and for **Principal**, paste in the username, e.g. student-02-9b295853bcee@qwiklabs.net, assigned to **Cymbal Owner** during lab.
   
@@ -352,6 +369,7 @@ Now that the database has been migrated to a Cloud SQL for PostgreSQL instance, 
     - Look for the Principal that match the username of **Cymbal Editor**. The role should be displayed as **Viewer**. Click on the pencil icon to edit the role. Change the role to **Editor**. Click **Save**.
     - Look for the Principal that match the username of **Cymbal Owner**. The role should be displayed as **Cloud SQL Instance User**. Click on the pencil icon to edit the role. Type **Cloud SQL Admin** in the filter and select it. Click **Save**.
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 <hr>
 
@@ -376,6 +394,7 @@ For [subnet b name] set the region to [network region 2].
 
   - Set the **IP stack type** to **IPv4 (single-stack)**
   - Set IPv4 range to `10.10.20.0/24`
+
 
 :red_circle: :red_circle: **Solution to Create a VPC network with two subnetworks** :red_circle: :red_circle:  
 
@@ -407,6 +426,8 @@ gcloud compute networks subnetworks create [subnet b name] \
 gcloud compute networks subnets list \
 --network [network name]
 ```  
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
   #### Create firewall rules for the VPC network
 
@@ -455,11 +476,13 @@ gcloud compute firewall-rules list \
   --filter network=[network name]
 ```
 
-Note:
+Explanation:
 - [VPC firewall rules](https://cloud.google.com/firewall/docs/using-firewalls#:~:text=Permissions%20required%20for%20this%20task%201%20In%20the,on%20match%2C%20choose%20allow%20or%20deny.%20More%20items)
 - `--direction ingress` is default
 - by ommiting `--target-tags` and `--target-service-accounts`, firewall rule should apply to all targets (instances) in network.
 - by ommiting `--destination-ranges`, firewall rule apply to entire IPv4 range.
+
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 <hr>
 
@@ -498,6 +521,7 @@ Before fixing the underlying issue, you have been requested to create a log sink
   - Click on the arrow on the left to expand the entry.
   - **Expand nested fields** to show the full JSON log entry, scroll down and have a look at the different fields.
 
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 2. Once you have identified the service error logs, create a sink to send the logs out to BigQuery.
 
@@ -517,6 +541,7 @@ Before fixing the underlying issue, you have been requested to create a log sink
     - Leave the rest of the options at the default settings.
     - Click **CREATE SINK**.
       
+:red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 3. Grant the **Antern Editor** user the **BigQuery Data Viewer** role for this project. Their username is: `Antern Editor username`.
 
