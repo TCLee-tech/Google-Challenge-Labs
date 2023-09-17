@@ -522,6 +522,10 @@ Before fixing the underlying issue, you have been requested to create a log sink
   - Look at the list of log entries under "Query results".
   - To expand a log entry, click on the **>** arrow on the left.
 
+![Log Explorer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5723697eb13bb6b8bb353e90fa9ad093f81b4edd/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud/Log%20Explorer.jpg)
+
+![Custom summary fields under Edit of Log Explorer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5723697eb13bb6b8bb353e90fa9ad093f81b4edd/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud/custom%20summary%20fields.jpg)
+
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
 2. Once you have identified the service error logs, create a sink to send the logs out to BigQuery.
@@ -550,6 +554,7 @@ Reference:
   - [Logging query language](https://cloud.google.com/logging/docs/view/logging-query-language)
   - [Configure log sinks - route logs to supported destinations](https://cloud.google.com/logging/docs/export/configure_export_v2)
 
+![Create sink from More Actions in Log Explorer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5723697eb13bb6b8bb353e90fa9ad093f81b4edd/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud/Create%20sink%20from%20More%20actions%20drop-down%20menu.jpg)
 
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
 
@@ -601,3 +606,7 @@ cd cloud-ops-sandbox/sre-recipes
     - Click on the IP Endpoint for **frontend-external** (Type: External load balancer) to access front page of application. Check that it is working properly.  
   
 :red_circle: :red_circle: ================ :red_circle: :red_circle:  
+
+![Task 4 Kubernetes services ok](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5723697eb13bb6b8bb353e90fa9ad093f81b4edd/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud/Task4%20all%20Kubernetes%20services%20ok.jpg)
+
+![Quest complete confetti](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/5723697eb13bb6b8bb353e90fa9ad093f81b4edd/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud/Deploy%20and%20Manage%20Cloud%20Environments%20with%20Google%20Cloud%20completion%20confetti.jpg)
