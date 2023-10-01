@@ -41,7 +41,7 @@ To verify,
 gcloud storage ls
 ```
 
-Reference:
+To learn more:
 - [Create buckets](https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-cli)
 - bucket location can only be narrowed down to a geographical region, not zone. [Bucket locations](https://cloud.google.com/storage/docs/locations)
 - [List buckets](https://cloud.google.com/storage/docs/listing-buckets#gcloud-list-buckets)
@@ -184,13 +184,13 @@ nano package.json
 8. Deploy function by running the following command in same directory containing the Node.js function codes:
 ```
 gcloud functions deploy <Cloud Function Name> \
-    --gen2
-    --region <REGION>
+    --gen2 \
+    --region <REGION> \
     --trigger-bucket <Bucket Name> \
     --runtime nodejs20
     
 ```
-Reference:
+To learn more:
 - [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 - [deploy 2nd gen function using CLI](https://cloud.google.com/functions/docs/create-deploy-gcloud)
 - no need "--entry-point <Cloud Function Name>" because it defaults to the NAME/ID of the function
@@ -207,7 +207,7 @@ You should see "status: ACTIVE".
 You must upload one JPG or PNG image into the bucket
 
 1. Upload a PNG or JPG image to `Bucket Name` bucket.
-> **Note**: Alternatively Download this image https://storage.googleapis.com/cloud-training/gsp315/map.jpg to your machine. Then upload it to the bucket.
+> **Note**: Alternatively, download this image https://storage.googleapis.com/cloud-training/gsp315/map.jpg to your machine. Then upload it to the bucket.
 2. You will see a thumbnail image appear shortly afterwards (use **REFRESH** in the bucket details).
 
 ##### 🔴 Solution:
@@ -217,7 +217,8 @@ gcloud storage cp map.jpg gs://<Bucket Name>
 ```
 In Google Cloud Console > Cloud Storage > Buckets > press **REFRESH** to check for thumbnail addition.
 
-Reference: [gcloud storage cp command](https://cloud.google.com/sdk/gcloud/reference/storage/cp)
+To learn more: 
+- [gcloud storage cp command](https://cloud.google.com/sdk/gcloud/reference/storage/cp)
 
 <hr>
 
@@ -233,9 +234,9 @@ From `Username 1` account, in Cloud Shell, run:
 ```
 gcloud iam roles delete Viewer --project <PROJECT_ID>
 ```
-To verify, log in to `Username 2` and try to view content of storage bucket.
+To verify, log in to `Username 2` and try to view content of storage bucket. It should be unsuccessful.
 
-Reference:
-[gcloud iam roles delete](https://cloud.google.com/sdk/gcloud/reference/iam/roles/delete)
+To learn more:
+- [gcloud iam roles delete](https://cloud.google.com/sdk/gcloud/reference/iam/roles/delete)
 
 
