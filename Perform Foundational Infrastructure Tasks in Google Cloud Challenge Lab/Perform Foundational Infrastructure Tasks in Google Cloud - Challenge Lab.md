@@ -174,13 +174,13 @@ nano index.js
 ```
 3. Copy the code meant for `index.js` from the lab instructions and paste it into the file.
 4. Exit nano editor with saving:
-**CTRL+ x**, followed by **y**
+**CTRL+ x**, followed by **y** and **ENTER**
 5. Create and open `package.json` for editing:
 ```
 nano package.json
 ```
 6. Copy the code meant for `package.json` from the lab instructions and paste it into the file.
-7. **CTRL+ x**, followed by **y** to exit with saving.
+7. **CTRL+ x**, followed by **y** and **ENTER** to exit with saving.
 8. Deploy function by running the following command in same directory containing the Node.js function codes:
 ```
 gcloud functions deploy <Cloud Function Name> \
@@ -194,6 +194,25 @@ To learn more:
 - [gcloud functions deploy](https://cloud.google.com/sdk/gcloud/reference/functions/deploy)
 - [deploy 2nd gen function using CLI](https://cloud.google.com/functions/docs/create-deploy-gcloud)
 - no need "--entry-point <Cloud Function Name>" because it defaults to the NAME/ID of the function
+- If asked for permission to enable API(eventarc.googleapis.com) on project, enter **Y**.   
+
+Alternative to step (8) using Google Cloud Console:
+  - Navigation menu > **Cloud Functions** > **+ CREATE FUNCTION**
+  - Environment: 2nd gen
+  - Function name: `Cloud Function Name`
+  - Region: <REGION>
+  - + ADD TRIGGER: Cloud Storage trigger
+  - in side window to configure Cloud Storage trigger,
+    - Event: google.cloud.storage.object.v1.finalized
+    - Bucket: browse for qwiklabs-gcp-xxxxx-bucket and SELECT
+    - click **GRANT** for all roles/permissions requested
+      - Example 1: This trigger needs the role roles/eventarc.eventReceiver granted to service account 291777896377-compute@developer.gserviceaccount.com to receive events via Google sources.
+      - Example 2: This trigger needs the role roles/pubsub.publisher granted to service account service-291777896377@gs-project-accounts.iam.gserviceaccount.com to receive events via Cloud Storage.
+    - click **NEXT**
+  - in the next screen, change **Entry point**: <Cloud Function Name>
+  - For **Source code - Inline Editor**, replace with the codes for index.js and package.json
+  - click **DEPLOY**  
+
 
 To verify cloud function status:
 ```
@@ -212,7 +231,7 @@ You must upload one JPG or PNG image into the bucket
 
 ##### 🔴 Solution:
 ```
-curl https://storage.googleapis.com/cloud-training/gsp315/map.jpg .
+curl https://storage.googleapis.com/cloud-training/gsp315/map.jpg --output map.jpg
 gcloud storage cp map.jpg gs://<Bucket Name>
 ```
 In Google Cloud Console > Cloud Storage > Buckets > press **REFRESH** to check for thumbnail addition.
@@ -232,11 +251,11 @@ You will see that there are two users defined in the project.
 ##### 🔴 Solution:
 From `Username 1` account, in Cloud Shell, run:
 ```
-gcloud iam roles delete Viewer --project <PROJECT_ID>
+gcloud projects remove-iam-policy-binding <Project_ID> --member=user:<Username 2, e.g. student-01-xxxxxx@qwiklabs.net> --role=roles/viewer
 ```
-To verify, log in to `Username 2` and try to view content of storage bucket. It should be unsuccessful.
+To verify, Google Cloud Console > IAM & Admin > IAM. Under "VIEW BY PRINCIPALS", the entry for <Username 2> should be removed.
 
 To learn more:
-- [gcloud iam roles delete](https://cloud.google.com/sdk/gcloud/reference/iam/roles/delete)
-
+- [Revoke single role](https://cloud.google.com/iam/docs/granting-changing-revoking-access#iam-revoke-single-role-gcloud)
+- [policy binding](https://cloud.google.com/iam/docs/reference/rest/v1/Policy#Binding)
 
