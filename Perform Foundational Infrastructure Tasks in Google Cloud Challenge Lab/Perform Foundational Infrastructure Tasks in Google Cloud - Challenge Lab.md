@@ -200,8 +200,8 @@ Alternative to step (8) using Google Cloud Console:
   - Navigation menu > **Cloud Functions** > **+ CREATE FUNCTION**
   - Environment: 2nd gen
   - Function name: `Cloud Function Name`
-  - Region: <REGION>
-  - + ADD TRIGGER: Cloud Storage trigger
+  - Region: < REGION >
+  - **+ ADD TRIGGER**: Cloud Storage trigger
   - in side window to configure Cloud Storage trigger,
     - Event: google.cloud.storage.object.v1.finalized
     - Bucket: browse for qwiklabs-gcp-xxxxx-bucket and SELECT
@@ -209,7 +209,7 @@ Alternative to step (8) using Google Cloud Console:
       - Example 1: This trigger needs the role roles/eventarc.eventReceiver granted to service account 291777896377-compute@developer.gserviceaccount.com to receive events via Google sources.
       - Example 2: This trigger needs the role roles/pubsub.publisher granted to service account service-291777896377@gs-project-accounts.iam.gserviceaccount.com to receive events via Cloud Storage.
     - click **NEXT**
-  - in the next screen, change **Entry point**: <Cloud Function Name>
+  - in the next screen, change **Entry point**: < Cloud Function Name >
   - For **Source code - Inline Editor**, replace with the codes for index.js and package.json
   - click **DEPLOY**  
 
@@ -235,6 +235,8 @@ curl https://storage.googleapis.com/cloud-training/gsp315/map.jpg --output map.j
 gcloud storage cp map.jpg gs://<Bucket Name>
 ```
 In Google Cloud Console > Cloud Storage > Buckets > press **REFRESH** to check for thumbnail addition.
+
+![thumbnail added by Cloud Function](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/c263e28530e9418d0d8cf92e8f949725bac828c2/Perform%20Foundational%20Infrastructure%20Tasks%20in%20Google%20Cloud%20Challenge%20Lab/thumbnail%20created%20by%20Cloud%20Function.jpg)
 
 To learn more: 
 - [gcloud storage cp command](https://cloud.google.com/sdk/gcloud/reference/storage/cp)
