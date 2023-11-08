@@ -40,9 +40,9 @@ gcloud storage buckets create gs://[Project ID]
 ```
 Verify bucket creation from Cloud console > Cloud Storage > Buckets.
 
-References:
-[gcloud CLI tool](https://cloud.google.com/storage/docs/discover-object-storage-gcloud)
-[gcloud commands](https://cloud.google.com/sdk/gcloud/reference/storage)
+References:  
+[gcloud CLI tool](https://cloud.google.com/storage/docs/discover-object-storage-gcloud)  
+[gcloud commands](https://cloud.google.com/sdk/gcloud/reference/storage)  
 
 ### 2. Store `install-web.sh` on local machine or in Cloud Shell.
 To create a bash file (.sh) in Cloud Shell,
@@ -94,9 +94,9 @@ To make sure that the startup script was executed, view the serial port output
 gcloud compute instances get-serial-port-output [VM name] \
   --zone [ZONE]
 ```
-Reference:
-[gcloud compute instances create command](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create#--scopes)
-[Viewing serial port output](https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output#viewing_serial_port_output)
+Reference:  
+[gcloud compute instances create command](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create#--scopes)  
+[Viewing serial port output](https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output#viewing_serial_port_output)  
 
 ### Allow HTTP ingress to VM instance.
 - Every network has 2 implied firewall rules - block all ingress & allow all egress traffic.
@@ -113,15 +113,15 @@ gcloud compute firewall-rules create [rule_name] \
 > --source-ranges default='0.0.0.0/0'
 > --destination-ranges default='0.0.0.0/0'
 
-Reference:
-[Firewall rules overvieew](https://cloud.google.com/firewall/docs/firewalls)
-[Firewall rules commands](https://cloud.google.com/firewall/docs/using-firewalls)
-[Firewall rules syntax](https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create)
+Reference:  
+[Firewall rules overvieew](https://cloud.google.com/firewall/docs/firewalls)  
+[Firewall rules commands](https://cloud.google.com/firewall/docs/using-firewalls)  
+[Firewall rules syntax](https://cloud.google.com/sdk/gcloud/reference/compute/firewall-rules/create)  
 
 For this lab, I used the default Compute Engine service account, which has the basic Editor role. It is a best practice, according to the principle of least privilege, to modify this service account's role or create a user-managed service account and restrict it to the IAM role for Cloud Storage access.
 
-Reference:
-[What is a service account?](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam)
+Reference:  
+[What is a service account?](https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam)  
 
 
 gcloud storage buckets add-iam-policy-binding gs://[project ID] --member=serviceAccount:[email address] --role=roles/storage.objectViewer
