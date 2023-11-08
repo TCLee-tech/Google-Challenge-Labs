@@ -62,38 +62,20 @@ Click on the `install-web.sh` object to get its "gsutil URI" under LIVE OBJECT. 
 
 ### 4. Create VM instance
 ```
-gcloud compute instances create [VM name] \
-  --image-project=debian-cloud \
-  --image-family=debian-11 \    //default
-  --tags=http-server \   // to apply network firewall rules and routes to specific VMs
-  --scopes=storage-ro \
-  --metadata=startup-script-url=[cloud_storage_url]
-```
-
 gcloud compute instances create [VM-name] \
-    --project=[Project ID] \
-    --zone=us-west1-c \
-    --machine-type=e2-medium \
-    --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
-    --metadata=startup-script-url=gs://qwiklabs-gcp-02-dbe9b38c009c/install-web.sh,enable-oslogin=true \
-    --maintenance-policy=MIGRATE \
-    --provisioning-model=STANDARD \
-    --service-account=470345287476-compute@developer.gserviceaccount.com \
-    --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append \
+    --metadata=startup-script-url=gs://[ProjectID]/install-web.sh \
+    --scopes=https://www.googleapis.com/auth/devstorage.read_only \
     --tags=http-server \
-    --create-disk=auto-delete=yes,boot=yes,device-name=instance-2,image=projects/debian-cloud/global/images/debian-11-bullseye-v20231010,mode=rw,size=10,type=projects/qwiklabs-gcp-02-dbe9b38c009c/zones/us-west1-c/diskTypes/pd-balanced \
-    --no-shielded-secure-boot \
-    --shielded-vtpm \
-    --shielded-integrity-monitoring \
-    --labels=goog-ec-src=vm_add-gcloud \
-    --reservation-affinity=any
-
+    --create-disk=image=projects/debian-cloud/global/images/debian-11-bullseye-v20231010
+```
+Tagging VMs allow network rules and routes to be applied to specific VMs   
 To verify, Cloud console > Compute Engine > VM instances > check that [VM name] has been created.
 To make sure that the startup script was executed, view the serial port output
 ```
 gcloud compute instances get-serial-port-output [VM name] \
   --zone [ZONE]
 ```
+
 Reference:  
 [gcloud compute instances create command](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create#--scopes)   
 [Viewing serial port output](https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output#viewing_serial_port_output)  
@@ -101,11 +83,9 @@ Reference:
 ### 5. Allow HTTP ingress to VM instance.
 - Every network has 2 implied firewall rules - block all ingress & allow all egress traffic.
 - To access VM by HTTP from internet, we need to configure firewall to allow HTTP ingress to specific VM.
+- It is a best practice to define target VMs
 ```
-gcloud compute firewall-rules create [rule_name] \
-  --action=ALLOW \
-  --rules=tcp:80 \  
-  --target-tags http-server  // best practice to define target VMs
+gcloud compute firewall-rules create [FW-name] --action=ALLOW --rules=tcp:80 --target-tags http-server
 ```
 - the follow flags are default and can be excluded
 > --network=default  
@@ -151,4 +131,5 @@ Command to bind Cloud Storage viewer role:
 ```
 gcloud storage buckets add-iam-policy-binding gs://[project ID] --member=serviceAccount:[email address] --role=roles/storage.objectViewer
 ```
+Reference:  
 [gcloud storage buckets add-iam-policy-binding](https://cloud.google.com/sdk/gcloud/reference/storage/buckets/add-iam-policy-binding)
