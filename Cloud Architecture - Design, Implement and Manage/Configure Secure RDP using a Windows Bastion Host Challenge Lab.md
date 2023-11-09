@@ -50,7 +50,7 @@ Reference:
 gcloud compute networks create securenetwork \
 --subnet-mode=custom
 ```
-To verify, `gcloud compute networks list`.  
+To verify, `gcloud compute networks list`  
 
 - Create custom subnet in VPC network.  
 ```
@@ -60,7 +60,7 @@ gcloud compute networks subnets create securenetwork \
 ```
 To verify, `gloud compute networks subnetworks list`
 
-References:
+References:   
 [Create and manage VPC networks](https://cloud.google.com/vpc/docs/create-modify-vpc-networks#add-subnets)
 
 - Create firewall rule for inbound RDP traffic.
@@ -76,6 +76,7 @@ gcloud compute firewall-rules create [FW-rule-name] \
 ```
 To verify, Cloud console > VPC network > Firewall. Check for addition of [FW-rule-name] as configured.
 
+Reference:   
 [Allow ingress RDP connections to VMs](https://cloud.google.com/firewall/docs/using-firewalls#common-use-cases-allow-rdp)
 
 <hr>
@@ -114,28 +115,30 @@ gcloud compute instances create vm-bastionhost \
 --image-family windows-2016 \
 --tags=bastion-host
 ```   
-For `network-interface` flag, if `address` is not specified, defaults to "ephemeral IP".   
-`tags` identify specific VM for firewall rule/route.      
+Note: 
+  - For `network-interface` flag, if `address` is not specified, defaults to "ephemeral IP".   
+  - `tags` identify specific VM for firewall rule/route.      
+
 To verify, check Cloud console > Compute Engine > VM instances for creation of both instances.    
 
 - Create a user account and reset Windows password for `vm-securehost`
 ```
 gcloud compute reset-windows-password vm-securehost --user app-admin --zone [placeholder zone]
 ```  
-When prompted `Would you like to set or reset the password for [app-admin] (Y/n)?`, enter `y`.  
-Note down the password generated. username: app-admin. This is needed for task 3.
+    - When prompted `Would you like to set or reset the password for [app-admin] (Y/n)?`, enter `y`.  
+    - Note down the password generated. username: app-admin. This is needed for task 3.
 
 - Create a user account and reset Windows password for `vm-bastionhost`
 ```
 gcloud compute reset-windows-password vm-bastionhost --user app-admin --zone [placeholder zone]
 ```
-When prompted `Would you like to set or reset the password for [app-admin] (Y/n)?`, enter `y`.  
-Note down the password generated. username: app-admin. These are needed for task 3.  
+    - When prompted `Would you like to set or reset the password for [app-admin] (Y/n)?`, enter `y`.  
+    - Note down the password generated. username: app-admin. These are needed for task 3.  
 
 
 Reference:  
-[Create Windows Server instance](https://cloud.google.com/compute/docs/instances/windows/creating-managing-windows-instances#gcloud)
-[Windows Server 2016 images](https://cloud.google.com/compute/docs/images/os-details#windows_server)
+[Create Windows Server instance](https://cloud.google.com/compute/docs/instances/windows/creating-managing-windows-instances#gcloud)   
+[Windows Server 2016 images](https://cloud.google.com/compute/docs/images/os-details#windows_server)   
 
 <hr>
 
