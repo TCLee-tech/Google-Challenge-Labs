@@ -131,3 +131,10 @@ Reference:
 [Services](https://kubernetes.io/docs/concepts/services-networking/service/)   
 
 3. Copy the external_IP address and open it in a new browser tab to view the application
+
+<hr>
+
+### Troubleshooting
+**Receiving a 504, Gateway timeout error:** This might just indicate that the application hasn't quite initialized yet, but it could also be caused by a mismatch between the default port that is set in the Dockerfile (TCP port 8000) and the choice of application port you configured when deploying the application image, or when you configured external access.
+
+**Not receiving assessment score for the last three objectives:** This might just indicate that you have created your Kubernetes cluster in the different zone rather than `Placeholder value`. zone which is expected in the lab.
