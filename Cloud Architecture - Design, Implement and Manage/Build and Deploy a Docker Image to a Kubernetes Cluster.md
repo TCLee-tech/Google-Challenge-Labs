@@ -43,7 +43,7 @@ gcloud container clusters create echo-cluster \
 To verify, `gcloud container clusters list`
 
 Refeerence:  
-[Create a zonal cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster)
+[Create a zonal cluster](https://cloud.google.com/kubernetes-engine/docs/how-to/creating-a-zonal-cluster)  
 [gcloud container clusters create command](https://cloud.google.com/sdk/gcloud/reference/container/clusters/create#--zone)  
 [gcloud container clusters list command](https://cloud.google.com/sdk/gcloud/reference/container/clusters/list)  
 
@@ -116,7 +116,7 @@ kubectl create deployment echo-web --image=gcr.io/[Project_ID]/echo-app:v1 --por
 ```
 To get the status of the deployment, `kubectl get deployments`
 
-Reference:
+Reference:  
 [kubectl create deployment](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-deployment-em-)  
 [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)  
 
@@ -130,4 +130,4 @@ Reference:
 [kubectl expose](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#expose)   
 [Services](https://kubernetes.io/docs/concepts/services-networking/service/)   
 
-4. Copy the external_IP address and open it in a new browser tab to view the application
+3. Copy the external_IP address and open it in a new browser tab to view the application
