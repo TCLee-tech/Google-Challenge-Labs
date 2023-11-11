@@ -6,13 +6,15 @@ You are taking over ownership of a test environment and have been given an updat
 
 1. Before you get started, open the navigation menu and select **Cloud Storage**.
 
-2. Verify the echo-web-v2.tar.gz file is in the gs://[PROJECT_ID] bucket.
+2. Verify the echo-web-v2.tar.gz file is in the `gs://[PROJECT_ID]` bucket.
+
+![Scale out and update a containerized app on a Kubernetes Cluster image 1](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/b1a8406c2a9f9885b19fba3eebf5144718e4d9e4/Cloud%20Architecture%20-%20Design%2C%20Implement%20and%20Manage/Scale%20out%20and%20update%20a%20containerized%20app%20on%20a%20Kubernetes%20Cluster%20image%201.png)
 
 3. Check to make sure your GKE cluster has been created before continuing.
+4. Open the navigation menu and select **Kuberntes Engine > Clusters**.   
+Continue when you see a green checkmark next to `echo-cluster`:
 
-4. Open the navigation menu and select **Kuberntes Engine > Clusters**.
-
-Continue when you see a green checkmark next to echo-cluster:
+![Scale out and update a containerized app on a Kubernetes Cluster image 2](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/b1a8406c2a9f9885b19fba3eebf5144718e4d9e4/Cloud%20Architecture%20-%20Design%2C%20Implement%20and%20Manage/Scale%20out%20and%20update%20a%20containerized%20app%20on%20a%20Kubernetes%20Cluster%20image%202.png)
 
 5. To deploy your first version of the application, run the following commands in Cloud Shell to get up and running:
 ```
@@ -25,12 +27,12 @@ kubectl create deployment echo-web --image=gcr.io/qwiklabs-resources/echo-app:v1
 kubectl expose deployment echo-web --type=LoadBalancer --port 80 --target-port 8000
 ```
 #### Your challenge
-You need to update the running `echo-app` application in the `echo-web` deployment from the v1 to the v2 code you have been provided. You must also scale out the application to 2 instances (Qwiklab typo: should be 2 **replicas**) and confirm that they are all running.  
+You need to update the running `echo-app` application in the `echo-web` deployment from the v1 to the v2 code you have been provided. You must also scale out the application to 2 instances (Qwiklab's typo: should be 2 **replicas**) and confirm that they are all running.  
 
 <hr>
 
 ### Task 1. Build and deploy the updated application with a new tag
-The updated sample application, including the Dockerfile and the application context files, are contained in an archive called `echo-web-v2.tar.gz`. The archive has been copied to a Cloud Storage bucket in your lab project called gs://[PROJECT_ID]. V2 of the application adds a version number to the output of the application.
+The updated sample application, including the Dockerfile and the application context files, are contained in an archive called `echo-web-v2.tar.gz`. The archive has been copied to a Cloud Storage bucket in your lab project called `gs://[PROJECT_ID]`. V2 of the application adds a version number to the output of the application.
 
 Solution 👇👇👇 
 
