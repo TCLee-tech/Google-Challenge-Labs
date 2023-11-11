@@ -113,6 +113,8 @@ kubectl set image deployment/echo-web echo-app=gcr.io/[Project_ID]/echo-app:v2
 
 Verify that the rollout of `v2` of echo-app was sucessful by checking rollout status`kubectl rollout status deployment/echo-we`. Confirm with `kubectl get deployments` - check that `Pod Template.Containers.Image` refers to ` gcr.io/qwiklabs-gcp-xx-xxxx/echo-app:v2` and `Events` history reflects scale up of new image and scale down of old image.
 
+![kubectl get deployments](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/2579140992562482431a4e2d1ac060806878f6e2/Cloud%20Architecture%20-%20Design%2C%20Implement%20and%20Manage/kubectl%20describe%20deployment.jpg)
+
 Reference:  
 [Kubernetes - Update a Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment)  
 
