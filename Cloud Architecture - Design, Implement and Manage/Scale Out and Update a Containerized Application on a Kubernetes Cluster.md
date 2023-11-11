@@ -124,6 +124,8 @@ kubectl scale deployment/echo-web --replicas=2
 ```
 To verify, `kubectl get deployments`
 
+![2 replicas of new echo-app:v2](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/8fe622e8e7ab6e800fcfa00a54ced9bbd33afdb8/Cloud%20Architecture%20-%20Design%2C%20Implement%20and%20Manage/2%20replicas%20of%20new%20image.jpg)
+
 Reference:   
 [Kubernetes - Scaling a Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#scaling-a-deployment)  
 
