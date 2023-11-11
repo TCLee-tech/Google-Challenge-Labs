@@ -70,7 +70,7 @@ Reference:
 tar -xf  echo-web.tar.gz 
 ```
 
-3. Build Docker image using Docker
+3. Build Docker image
 ```
 docker build . --tag gcr.io/[Project_ID]/echo-app:v1
 ```
@@ -78,7 +78,7 @@ docker build . --tag gcr.io/[Project_ID]/echo-app:v1
   - the `.` in the command specifies that the PATH is the local directory
   - command must be executed from directory containing source code and Dockerfile
 
-To verify, execute `docker images` to check for custom image and base image. 
+To verify, execute `docker images` to check for custom image. 
 
 References:  
 [Docker build](https://docs.docker.com/engine/reference/commandline/build/#examples)
@@ -93,6 +93,7 @@ Solution 👇👇👇
 ```
 gcloud auth configure-docker
 ```
+Command adds credentials for all GCR repositories. When asked "Do you want to continue (Y/n)?", enter `y`. In production, grant credentials for specific repo.
 
 Reference:
 [Authentication of third-party client with Container Registry](https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud-helper)  
@@ -101,7 +102,7 @@ Reference:
 ```
 docker push gcr.io/[Project_ID]/echo-app:v1
 ```
-To verify, in Cloud console > Container Registry > confirm that container image has been uploaded
+To verify, in Cloud console > Container Registry > confirm that `echo-app` container image has been uploaded in [Project_ID] repo.
 
 <hr>
 
