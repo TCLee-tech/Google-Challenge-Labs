@@ -31,7 +31,7 @@ If the database has been incorrectly migrated, the "blog is running" test will f
 
 Solution 👇👇👇 
 
-1. Set default compute region and zone in local client (Cloud Shell) to that for Kubernetes cluster.
+### 1. Set default compute region and zone in local client (Cloud Shell) to that for Kubernetes cluster.
 In Cloud Shell,
 ```
 gcloud config set compute/region [Region]
@@ -45,7 +45,7 @@ gcloud config get-value compute/zone
 Reference:  
 [gcloud compute defaults](https://cloud.google.com/compute/docs/gcloud-compute)  
 
-2. Create a Cloud SQL instance
+### 2. Create a Cloud SQL instance
 
 The VM instance named `blog` hosting the WordPress blog has internal ephemeral IP and static external IP addresses. It is in the `default` network.
 
@@ -74,7 +74,7 @@ References:
 [gcloud sql instances create](https://cloud.google.com/sdk/gcloud/reference/sql/instances/create)  
 [Cloud SQL - configure public IP](https://cloud.google.com/sql/docs/mysql/configure-ip)
 
-3. Create a database instance
+### 3. Create a database instance
 From Google Cloud console,
 - Navigation menu > SQL > click on name of SQL instance `sql-instance`. 
 - On the left-hand menu, select **Databases** tab.
@@ -88,16 +88,16 @@ gcloud sql databases create wordpress --instance=sql-instance
 Reference:  
 [gcloud sql databases create](https://cloud.google.com/sdk/gcloud/reference/sql/databases/create)  
 
-4. Create a user
+### 4. Create a user
 From Google Cloud console,
 - Navigation menu > SQL > click on `sql-instance` instance name.
 - On the left-hand SQL navigation menu, select **Users** tab.
 - Click **+ ADD USER ACCOUNT**.
-- In the `Add a user account to instance wordpress` slide-out menu:
+- In the `Add a user account to instance sql-instance` slide-out menu:
     - under `Built-in authentication`, enter **blogadmin** for `User name` and __Password1*__ for `Password`. 
-    - under`Host name`, select `Restrict host by IP address or address range` and enter external-IP address of `blog` VM instance. Change the last octet to 0 with 24 mask, e.g. 34.82.147.67 becomes 34.82.147.**0/24**
+    - under`Host name`, select `Restrict host by IP address or address range` and enter External-IP address of `blog` VM instance. Change the last octet to 0 with 24 mask, e.g. 34.82.147.67 becomes 34.82.147.**0/24**
     - Less secure alternative is to leave as default `Allow any host`. This option is not allowed for progress in this lab.
-Click **ADD**.
+    - Click **ADD**.
 
 Alternatively, to use Cloud Shell,
 ```
@@ -107,7 +107,8 @@ Reference:
 [gcloud sql users create](https://cloud.google.com/sdk/gcloud/reference/sql/users/create)
 
 
-5. Export existing `wordpress` database
+### 5. Export existing `wordpress` database.
+
 SSH into the `blog` VM instance.  
 
 Run `mysqldump` to create a SQL dump file.   
@@ -116,8 +117,9 @@ mysqldump --databases wordpress --host=localhost --user=blogadmin --password=Pas
 ```
 There should not be any error messages.
 
-[Syntax for mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-syntax)
-[Exporting data from on-premise MySQL database for import into Cloud SQL database](https://cloud.google.com/sql/docs/mysql/import-export/import-export-sql#export-mysqldump)
+References:  
+[Syntax for mysqldump](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-syntax)   
+[Exporting data from on-premise MySQL database for import into Cloud SQL database](https://cloud.google.com/sql/docs/mysql/import-export/import-export-sql#export-mysqldump)   
 
 Create a Cloud Storage bucket to keep the SQL dump file.  
 ```
@@ -128,38 +130,38 @@ Upload SQL dump file from `blog` VM to newly created Cloud Storage bucket
 gcloud storage cp ~/backup.sql gs://[Bucket_name]
 ```
 To verify, in Cloud console > Cloud Storage > click on [Project_ID] bucket > should see `backup.sql` object.   
-Check the size of `backup.sql`. It should not be 0 KB (empty file, indicating a failure with the mysqldump command). It should be ~ 47.6 KB.
-Copy the gsutil URI for the next step (import SQL dump file into Cloud SQL).    
+  - Check the size of `backup.sql`. It should not be 0 KB (empty file, indicating a failure with the mysqldump command). It should be ~ 47.6 KB.  
+  - Copy the gsutil URI for the next step (import SQL dump file into Cloud SQL).     
 
-6. Importing SQL dump file into Cloud SQL   
+### 6. Importing SQL dump file into Cloud SQL   
 
-Describe the SQL instance you are importing into
+a. Describe the SQL instance you are importing into
 ```
 gcloud sql instances describe sql-instance
 ```
- - Syntax: gcloud sql instances describe SQL_INSTANCE_NAME
+  - Syntax: gcloud sql instances describe SQL_INSTANCE_NAME  
 
-Copy the serviceAccountEmailAddres field (e.g. p267356582507-sbccwa@gcp-sa-cloud-sql.iam.gserviceaccount.com)
+b. Copy the serviceAccountEmailAddres field (e.g. p267356582507-sbccwa@gcp-sa-cloud-sql.iam.gserviceaccount.com)
 
-Grant the `storage.objectAdmin` IAM role to the SQL instance's service account. So that the service account can read the Cloud Storage bucket. 
+c. Grant the `storage.objectAdmin` IAM role to the SQL instance's service account. So that the service account can read the Cloud Storage bucket. 
 ```
 gsutil iam ch serviceAccount:[SERVICE-ACCOUNT]:objectAdmin \
 gs://[Bucket_name]
 ```
-Import the SQL dump file from Cloud Storage bucket into Cloud SQL
+d. Import the SQL dump file from Cloud Storage bucket into Cloud SQL
 ```
 gcloud sql import sql sql-instance gs://[Bucket_name]/backup.sql --database=wordpress
 ```
-- Syntax: `gcloud sql import sql SQL_INSTANCE_NAME gs://BUCKET_NAME/IMPORT_FILE_NAME --database=DATABASE_NAME`
+  - Syntax: `gcloud sql import sql SQL_INSTANCE_NAME gs://BUCKET_NAME/IMPORT_FILE_NAME --database=DATABASE_NAME`
 
 Reference:     
 [Import a SQL dump file to Cloud SQL for MySQL](https://cloud.google.com/sql/docs/mysql/import-export/import-export-sql#import_a_sql_dump_file_to)   
 [Syntax for gcloud sql import sql](https://cloud.google.com/sdk/gcloud/reference/sql/import/sql)   
 
-7. Reconfigure blog software to use Cloud SQL database
+### 7. Reconfigure blog software to use Cloud SQL database
  - SSH into VM instance named`blog`
  - Change to directory with WordPress config file. `cd /var/www/html/wordpress/`
- - `ls` to list director content
+ - `ls` to list directory content
  - stop the MySQL server. 
      - `sudo service mgsql stop`
      - `sudo service mysql status` to verify
@@ -171,4 +173,4 @@ Reference:
      - `sudo service apache2 status` to verify  
 
  To verify, copy the External IP of the `blog` VM into a new browser tab **using http://[External_IP]**. The blog should load, even though the MySQL service on the `blog` VM was stopped.
-  - do not just click on the External IP from the Cloud console, or copy-and-paste into the address bar of a new browser tab. It will run as **https**://[Enternal_IP]. The blog is not configured to handle https and give return an error "Hmmm… can't reach this page 35.229.50.22 refused to connect."
+  - do not just click on the External_IP of the `blog` VM from the Cloud console, or copy-and-paste the External_IP into the address bar of a new browser tab. It will run as **https**://[Enternal_IP]. The blog is not configured to handle https and give return an error "Hmmm… can't reach this page 35.229.50.22 refused to connect."
