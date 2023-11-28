@@ -193,8 +193,15 @@ kubectl edit deployment frontend
 One line down, replace **imagePullPolicy: IfNotPresent** to **imagePullPolicy: Always**   
 In the Cloud console, click **SAVE** after editing. For the CLI `vi` editor, to save changes made, press `ESC` + `:wq`.  
 
-To verify, in Cloud console > Kubernetes Engine > Workload > frontend > frontend-xxxxxx under Managed pods > click on **server** of Containers: server under Pod specification
+![Editing on GCP console](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%203%20-%20Editing%20frontend%20deployment%20in%20console.jpg)  
 
+![Editing in vi editor in Cloud Shell](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%203%20-%20Editing%20frontend%20deployment%20CLI.jpg)  
+
+To verify, in Cloud console > Kubernetes Engine > Workload > frontend > frontend-xxxxxx under Managed pods > click on **server** of Containers: server under Pod specification  
+
+![Task 3 - confirm Frontend pod updated](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%203%20frontend%20pod%20%20updated.jpg)  
+
+![Task 3 - ReplicaSet view of updated pod](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%203%20frontend%20ReplicaSet%20view%20-%20pod%20updated.jpg)  
 
 References:   
 - [kubectl edit](https://kubernetes.io/docs/concepts/cluster-administration/manage-deployment/#kubectl-edit).
@@ -316,6 +323,8 @@ kubectl autoscale deployment recommendationservice --cpu-percent=50 --min=1 --ma
 ```  
 To verify, `kubectl get hpa`  
 
+![reommendationservice NOT stressed in my lab](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%204%20recommendationservice%20not%20stressed.jpg)
+
 <hr>
 
 ### Task 5. (Optional) Optimize other services
@@ -351,3 +360,10 @@ Relevant command:
 gcloud container clusters update [Cluster Name] --enable-vertical-pod-autoscaling
 ```
 Need to add VPA.yaml referring to target deployment and apply manifest file.
+
+4. Kube system resources stressed:
+
+! [CPU usage](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%205%20Observability%20-%20CPU%20Requests%20under%20load.jpg)  
+
+![Memory usage](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%205%20Observability%20-%20Memory%20Requests%20under%20load.jpg)
+
