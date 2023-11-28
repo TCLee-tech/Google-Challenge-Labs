@@ -122,7 +122,7 @@ for node in $(kubectl get nodes -l cloud.google.com/gke-nodepool=default-pool -o
 done
 ```
 
-Code breaker:
+Code explanation:
 - these are Linux **for** commands
 - syntax: **for** NAME in [WORDS ...]; do COMMANDS; done
 - the NAME is set to each element present in the [WORDS ...] list. **for** each element in WORDS, the set of COMMANDS will be executed. 
