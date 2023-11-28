@@ -204,13 +204,14 @@ References:
 - [kubectl patch](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#patch) is possible, but the data model for this frontend deployment is not simple. It is time consuming to create the CLI command.    
 - [Updating API Objects in place using kubectl patch](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/)   
 
-[kubectl set image](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-image-em-) can be used to update to the new image. However, this command does not have an option (flag) to update imagePullPolicy.
+- [kubectl set image](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-image-em-) can be used to update to the new image. However, this command does not have an option (flag) to update imagePullPolicy.
+  
 ```
 kubectl set image deployment/frontend server=gcr.io/qwiklabs-resources/onlineboutique-frontend:v2.1
-```
+```  
   - syntax: kubectl set image deployment/[name of deployment] [container name]=[image name]:[image tag]  
 
-To verify that the app is working, `kubectl get service --namespace=dev`, copy the **EXTERNAL_IP** for **frontend-external** service and run it in a new browser window. You should see a new different frontpage. 
+To verify that the app is working, `kubectl get service --namespace=dev`, copy the **EXTERNAL_IP** for **frontend-external** service and run it in a new browser window. You should see a new different frontpage.   
 
 <hr>
 
@@ -282,8 +283,8 @@ kubectl get services
 ```
 kubectl exec $(kubectl get pod --namespace=dev | grep 'loadgenerator' | cut -f1 -d ' ') -it --namespace=dev -- bash -c 'export USERS=8000; locust --host="http://YOUR_FRONTEND_EXTERNAL_IP" --headless -u "8000" 2>&1'
 ```
- Code explanation:
- - the $() expression is for command substitution and it invokes a subshell environment to run the command within the braces of $(). The stdout is returned to the parent command in the $() position.
+ Code explanation:  
+ - the **$( )** expression is for command substitution and it invokes a subshell environment to run the command within the braces of $ ( ). The stdout is returned to the parent command in the $ ( ) position.
 - `kubectl get pod --namespace=dev` will return all the pods within the dev namespace
 - the pod names are then filtered for `'loadgenerator'` using grep and the line with 'loadgenerator' is output to the next code block.
 - `cut` is a Linux/Unix command-line utility. It is used in this case, to cut the data piped in from the grep code block.
