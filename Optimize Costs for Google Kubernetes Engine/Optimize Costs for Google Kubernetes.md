@@ -363,7 +363,7 @@ Need to add VPA.yaml referring to target deployment and apply manifest file.
 
 4. Kube system resources stressed:
 
-! [CPU usage](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%205%20Observability%20-%20CPU%20Requests%20under%20load.jpg)  
+![CPU usage](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%205%20Observability%20-%20CPU%20Requests%20under%20load.jpg)  
 
 ![Memory usage](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3c1e06238f4b8ff89d252c5c127f7e6727b5427a/Optimize%20Costs%20for%20Google%20Kubernetes%20Engine/Task%205%20Observability%20-%20Memory%20Requests%20under%20load.jpg)
 
