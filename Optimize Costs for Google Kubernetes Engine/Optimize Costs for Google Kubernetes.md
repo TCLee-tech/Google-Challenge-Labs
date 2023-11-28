@@ -63,9 +63,8 @@ git clone https://github.com/GoogleCloudPlatform/microservices-demo.git &&
 cd microservices-demo && kubectl apply -f ./release/kubernetes-manifests.yaml --namespace dev
 ```
 To verify, **Cloud Console** > **Navigation Menu** > **Kubernetes Engine** > **Workloads** to check for the deployed micro-services.  
-To check that **OnlineBoutique** store is up and running, get the external IP address for **frontend-external** service using `kubectl get services --namespace=dev`. Alternatively, in **Cloud Console** for **Kubernetes Engine**, click on **Services & Ingress**.   
-Frontend-external service has an **External load balancer endpoint**.   
-Copy and paste the external IP address in a new browser tab to access the online boutique.
+To check that **OnlineBoutique** store is up and running, get the external IP address for **frontend-external** service using `kubectl get services --namespace=dev`.  
+Alternatively, in **Cloud Console** for **Kubernetes Engine**, click on **Services & Ingress**. Frontend-external service has an **External load balancer endpoint**. Copy and paste the external IP address in a new browser tab to access the online boutique.
 
 <hr>
 
@@ -204,14 +203,14 @@ References:
 - [kubectl patch](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#patch) is possible, but the data model for this frontend deployment is not simple. It is time consuming to create the CLI command.    
 - [Updating API Objects in place using kubectl patch](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/)   
 
-- [kubectl set image](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-image-em-) can be used to update to the new image. However, this command does not have an option (flag) to update imagePullPolicy.
-  
+- [kubectl set image](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-image-em-) can be used to update to the new image. However, this command does not have an option (flag) to update imagePullPolicy.  
+
 ```
 kubectl set image deployment/frontend server=gcr.io/qwiklabs-resources/onlineboutique-frontend:v2.1
-```  
+```
   - syntax: kubectl set image deployment/[name of deployment] [container name]=[image name]:[image tag]  
 
-To verify that the app is working, `kubectl get service --namespace=dev`, copy the **EXTERNAL_IP** for **frontend-external** service and run it in a new browser window. You should see a new different frontpage.   
+To verify that the app is working, `kubectl get service --namespace=dev`, copy the **EXTERNAL_IP** for **frontend-external** service and run it in a new browser window. You should see a new different frontpage. 
 
 <hr>
 
@@ -283,8 +282,8 @@ kubectl get services
 ```
 kubectl exec $(kubectl get pod --namespace=dev | grep 'loadgenerator' | cut -f1 -d ' ') -it --namespace=dev -- bash -c 'export USERS=8000; locust --host="http://YOUR_FRONTEND_EXTERNAL_IP" --headless -u "8000" 2>&1'
 ```
- Code explanation:  
- - the **$( )** expression is for command substitution and it invokes a subshell environment to run the command within the braces of $ ( ). The stdout is returned to the parent command in the $ ( ) position.
+ Code explanation:
+ - the $ ( ) expression is for command substitution and it invokes a subshell environment to run the command within the braces of $ ( ). The stdout is returned to the parent command in the $ ( ) position.
 - `kubectl get pod --namespace=dev` will return all the pods within the dev namespace
 - the pod names are then filtered for `'loadgenerator'` using grep and the line with 'loadgenerator' is output to the next code block.
 - `cut` is a Linux/Unix command-line utility. It is used in this case, to cut the data piped in from the grep code block.
@@ -309,7 +308,7 @@ References:
 - [running locust without the web UI](https://docs.locust.io/en/stable/running-without-web-ui.html)    
 - [Bash I/O redirection](https://tldp.org/LDP/abs/html/io-redirection.html)    
 
-5. In the Cloud console, go to **Navigation menu** > **Kubernetes Engine** > **Workloads** > **recommendationservice** overview. Refresh to observe effect of load test. Select "Expand chart legend" for clarity. You will see CPU usage time increasing past requested towards limit.
+5. In the Cloud console, go to **Navigation menu** > **Kubernetes Engine** > **Workloads** > **recommendationservice** overview. Refresh to observe effect of load test. On each CPU/Memory/Disk chart, click on the 3 dots at the top, and select "Expand chart legend" for clarity. You may see CPU usage time increasing past requested towards limit. You may not ..
 
 6. Apply horizontal pod autoscaler to `recommendationservice`.
 ```
@@ -332,18 +331,23 @@ You can also see if it would be possible to further optimize your resource utili
 1. Try to enable node auto provisioning. This allows cluster autoscaler to create new node pools with different node specifications.
 ```
 gcloud container clusters update [Cluster Name] --enable-autoprovisioning --max-cpu= --max-memory=
-```
-**Navigation menu** > **Kubernetes** > to observe whether new node pool created.
+```   
 
-? optimize utilization for autoscaler profile
+Reference:
+- [gcloud container clusters update --enable-autoprovisioning](https://cloud.google.com/sdk/gcloud/reference/container/clusters/update#--enable-autoprovisioning)  
+- `--max-cpu` refers to the max number of cores (e.g. 4) to which the cluster can scale,
+- `--max-memory` refers to the max number of gigabytes of memory (e.g. 5) to which the cluster can scale.  
+
+To verify, **Navigation menu** > **Kubernetes Engine** > **Clusters** to observe whether new node pool created. [None observed for me]
+
+2. "optimize-utilization" for autoscaler profile is likely NOT an option for a production e-commerce website which may encounter spiky traffic. It is more suitable for batch workloads.
 ```
 gcloud container clusters update [Cluster Name] --autoscaling-profile=optimize-utilization
 ```
 
-? vertical pod autoscaling
+3. Vertical Pod Autoscaling (VPA) will not give accurate results for this lab as VPA requires time (at least 24 hours recommended) to collect usage data.
+Relevant command: 
 ```
 gcloud container clusters update [Cluster Name] --enable-vertical-pod-autoscaling
 ```
-Need to add VPA.yaml and apply manifest.
-
-gcloud container clusters update [CLUSTER_NAME] --no-enable-vertical-pod-autoscaling --node-pool [NODE_POOL_NAME] --project [PROJECT_ID]
+Need to add VPA.yaml referring to target deployment and apply manifest file.
