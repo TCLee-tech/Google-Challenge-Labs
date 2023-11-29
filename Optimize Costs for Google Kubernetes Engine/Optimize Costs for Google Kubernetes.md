@@ -128,7 +128,7 @@ Code explanation:
 - `;` semi-colon is a command seperator, allows putting 2 or more commands on the same line.
 
 - the $(...) expression is known as command substitution and it invokes a subshell.
-- the command within the braces of $() is executed in the subshell environment, and the stdout output is returned to the parent command in the $() position.
+- the command within the braces of $ ( ) is executed in the subshell environment, and the stdout output is returned to the parent command in the $ ( ) position.
 
 - ["kubectl get" command](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get)
 - `-l`: label to select/query/filter with. Requires key1=value1,key2=value2
@@ -302,7 +302,7 @@ kubectl exec $(kubectl get pod --namespace=dev | grep 'loadgenerator' | cut -f1 
 - What comes after `--` are the commands for the app within container.
 - `bash` specifies invocation of a bash shell
 - `-c` tells bash to read and execute the command_string within 'export ...2>&1', then exit.
-- export USERS=8000 is to set the "USERS" variable to 8000, i.e. 8000 concurrent users, simulating a traffic spike
+- `export USERS=8000` is to set the "USERS" variable to 8000, i.e. 8000 concurrent users, simulating a traffic spike
 - locust is the load testing tool installed on the pod
 - `--headless` is to run locust without the web UI
 - `-u "8000"` specifies 8000 users
