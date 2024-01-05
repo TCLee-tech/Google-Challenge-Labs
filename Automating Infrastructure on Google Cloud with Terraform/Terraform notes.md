@@ -114,7 +114,7 @@ For configuration with module blocks, re-running init will not change already in
 Use -upgrade option to update all modules.
 
 #### Modules are reusable configuration files inside a folder.
-- Yhey reduce the amount of code needed when there are multiple infrastructure components of the same type. Can use input variables in modules.
+- They reduce the amount of code needed when there are multiple infrastructure components of the same type. Can use input variables in modules.
 - Yop level "provider.tf" is an encapsulated binary file for a single infrastructure or service provider.
 - Then, a sub-folder (module) for a component type, e.g. vm instance.
 	--  main.tf is configuration file in that module.
