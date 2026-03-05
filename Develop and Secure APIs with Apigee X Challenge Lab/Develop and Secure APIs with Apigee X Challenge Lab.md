@@ -1,11 +1,16 @@
 # Develop and Secure APIs with Apigee X: Challenge Lab
-:exclamation: I would not recommend Google Apigee for API proxy managemnet. It involves a significant amount of custom configuration if 
- - there is a need to mask sensitive info in request and response messages, and logs for data privacy. May involve creation of new messages.
- - advanced security and encryption
+:exclamation: I would not recommend Google Apigee for API proxy management. It involves a significant amount of custom configuration if 
+ - there is a need to mask sensitive info in messages and logs for data privacy. May involve creation of new messages.
+ - advanced security and encryption.
 
-:exclamation: This lab targets Cloud Translation V2. The current version is V3. There are minor differences in required and optional fields for messages.
-`https://translation.googleapis.com/language/translate/v2`  
-:exclamation: The grading for this lab is very pydantic, i.e. the grading is looking for specific codes, even though there are viable alternatives. Especially for Task 2. 
+:exclamation: This lab targets Cloud Translation V2. The more feature-rich version is V3. `https://translation.googleapis.com/language/translate/v2` There are differences in required and optional fields for messages. Scrutinise carefully if migrating.
+  
+:exclamation: The grading for this lab is very pydantic, i.e. the grading is looking for specific codes, even though there are viable alternatives. Especially for Task 2.  
+:exclamation: English language use is not concise for the challenge lab instructions. 
+* Task 2 property set requirement: *Within the API proxy, create a property set named **language.properties**.*
+* The name required is **language**.
+* The name required is not **language.properties**.
+* **.properties** is a suffix referring to the resource type. It is already included when resource type is selected.
 
 ## Task 1. Proxy the Cloud Translation API
 
@@ -593,5 +598,6 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
 
