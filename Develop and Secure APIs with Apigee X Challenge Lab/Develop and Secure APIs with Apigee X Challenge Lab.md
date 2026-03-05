@@ -3,14 +3,21 @@
  - there is a need to mask sensitive info in messages and logs for data privacy. May involve creation of new messages.
  - advanced security and encryption.
 
-:exclamation: This lab targets Cloud Translation V2. The more feature-rich version is V3. `https://translation.googleapis.com/language/translate/v2` There are differences in required and optional fields for messages. Scrutinise carefully if migrating.
+:exclamation: This lab targets Cloud Translation V2. The more feature-rich version is V3. `https://translation.googleapis.com/language/translate/v2` 
+- There are differences in required and optional fields for messages. Scrutinise carefully if migrating.
   
-:exclamation: The grading for this lab is very pydantic, i.e. the grading is looking for specific codes, even though there are viable alternatives. Especially for Task 2.  
+:exclamation: The grading for this lab is very pydantic, i.e. the grading is looking for specific codes, even though there are viable alternatives. Especially for Task 2. The clues given with imperfect grades are misleading and may not refer to the issue.
+
 :exclamation: English language use is not concise for the challenge lab instructions. 
 * Task 2 property set requirement: *Within the API proxy, create a property set named **language.properties**.*
 * The name required is **language**.
 * The name required is not **language.properties**.
 * **.properties** is a suffix referring to the resource type. It is already included when resource type is selected.
+  
+![Task 2 property set](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3e21b8ff8a0678ae5623c800ac34adf54df4f21c/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/Task%202%20property%20set.jpg)
+
+:exclamation: Google Cloud Skills Boost support is not helpful. They misread queries and reply with cut-and-paste templates.
+
 
 ## Task 1. Proxy the Cloud Translation API
 
@@ -598,6 +605,7 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
 
 
