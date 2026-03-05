@@ -4,7 +4,7 @@
  - advanced security and encryption
 
 :exclamation: This lab targets Cloud Translation V2. The current version is V3. There are minor differences in required and optional fields for messages.
-`https://translation.googleapis.com/language/translate/v2`
+`https://translation.googleapis.com/language/translate/v2`  
 :exclamation: The grading for this lab is very pydantic, i.e. the grading is looking for specific codes, even though there are viable alternatives. Especially for Task 2. 
 
 ## Task 1. Proxy the Cloud Translation API
@@ -593,4 +593,5 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
