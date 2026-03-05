@@ -18,6 +18,10 @@
 
 :exclamation: Google Cloud Skills Boost support is not helpful. They misread queries and reply with cut-and-paste templates.
 
+:exclamation: There are guru who publish incomplete solutions.
+* One example:
+* lab instructions: ![lab instructions](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy.jpg)
+* incomplete solution: ![incomplete answer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy%20solution.jpg) 
 
 ## Task 1. Proxy the Cloud Translation API
 
@@ -605,6 +609,7 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
 
 
