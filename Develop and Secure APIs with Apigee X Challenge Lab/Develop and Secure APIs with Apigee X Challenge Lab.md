@@ -1,7 +1,10 @@
 # Develop and Secure APIs with Apigee X: Challenge Lab
-:exclamation: I would not recommend Google Apigee for API proxy management. It involves a significant amount of custom configuration if 
- - there is a need to mask sensitive info in messages and logs for data privacy. May involve creation of new messages.
- - advanced security and encryption.
+
+Some comments:
+
+:exclamation: I would not recommend Google Apigee for API proxy management. It involves a significant amount of custom configuration if there is a need
+ - to mask sensitive info in messages and logs for data privacy. May involve creation of new messages.
+ - for advanced security and encryption.
 
 :exclamation: This lab targets Cloud Translation V2. The more feature-rich version is V3. `https://translation.googleapis.com/language/translate/v2` 
 - There are differences in required and optional fields for messages. Scrutinise carefully if migrating.
@@ -17,11 +20,14 @@
 ![Task 2 property set](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3e21b8ff8a0678ae5623c800ac34adf54df4f21c/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/Task%202%20property%20set.jpg)
 
 :exclamation: Google Cloud Skills Boost support is not helpful. They misread queries and reply with cut-and-paste templates.
+![wrong replies by Cloud Skills support](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/924b128388a6c044c2b2b16b9ce274cb31c6431f/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/Irrelevant%20reply%20from%20Google%20Cloud%20Skills%20Boost.jpg)
 
 :exclamation: There are guru who publish incomplete solutions.
 * One example:
 * lab instructions: ![lab instructions](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy.jpg)
 * incomplete solution: ![incomplete answer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy%20solution.jpg) 
+
+:exclamation: The latest LLMs models, i.e. Gemini 3 and ChatGPT 5.2, are more grounded in the syntax for Cloud Translation V3. They hallucinate issues and solutions, do not perform well for trouble-shooting. 
 
 ## Task 1. Proxy the Cloud Translation API
 
@@ -609,6 +615,7 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
 
 
