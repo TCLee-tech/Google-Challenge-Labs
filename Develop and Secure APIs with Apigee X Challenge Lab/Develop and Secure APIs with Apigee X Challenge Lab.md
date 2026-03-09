@@ -19,12 +19,15 @@ Some comments:
   
 ![Task 2 property set](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/3e21b8ff8a0678ae5623c800ac34adf54df4f21c/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/Task%202%20property%20set.jpg)
 
-:exclamation: Google Cloud Skills Boost support is not helpful. They misread queries and reply with cut-and-paste templates. It seems to be operating out of India.
+:exclamation: Google Cloud Skills Boost support is not helpful. They misread queries and reply with cut-and-paste templates. It seems to be operating out of India.  
+
 ![wrong replies by Cloud Skills support](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/924b128388a6c044c2b2b16b9ce274cb31c6431f/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/Irrelevant%20reply%20from%20Google%20Cloud%20Skills%20Boost.jpg)
 
-:exclamation: There are gurus who publish incomplete "solutions" non-compliant with lab requirements.
+:exclamation: There are gurus who publish incomplete "solutions" non-compliant with lab requirements.  
+
 * One example:
-* lab instructions: ![lab instructions](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy.jpg)
+* lab instructions:  
+  ![lab instructions](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy.jpg)
 * incomplete solution: ![incomplete answer](https://github.com/TCLee-tech/Google-Challenge-Labs/blob/9e21223c90e38c290715637aeef6014b24f26af2/Develop%20and%20Secure%20APIs%20with%20Apigee%20X%20Challenge%20Lab/VerifyAPI%20policy%20solution.jpg) 
 
 :exclamation: The latest LLMs models, i.e. Gemini 3 and ChatGPT 5.2, are more grounded in the syntax for Cloud Translation V3. They hallucinate issues and solutions, do not perform well for trouble-shooting. 
@@ -615,6 +618,7 @@ The final *default.xml* for Target endpoint:
   </HTTPTargetConnection>
 </TargetEndpoint>
 ```
+
 
 
 
